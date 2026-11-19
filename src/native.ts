@@ -2,7 +2,8 @@ import { Capacitor } from '@capacitor/core';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
 import { KeepAwake } from '@capacitor-community/keep-awake';
 import { StatusBar, Style } from '@capacitor/status-bar';
-import { useStore } from './store';
+import { ScreenOrientation } from '@capacitor/screen-orientation';
+import { useStore, type Orientation } from './store';
 
 const isNative = Capacitor.isNativePlatform();
 
@@ -31,6 +32,16 @@ export async function setupStatusBar() {
     await StatusBar.setStyle({ style: Style.Dark });
     await StatusBar.setBackgroundColor({ color: '#072a18' });
     await StatusBar.setOverlaysWebView({ overlay: false });
+  } catch {
+    /* not critical */
+  }
+}
+
+export async function applyOrientation(mode: Orientation) {
+  if (!isNative) return;
+  try {
+    if (mode === 'auto') await ScreenOrientation.unlock();
+    else await ScreenOrientation.lock({ orientation: mode });
   } catch {
     /* not critical */
   }

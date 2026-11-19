@@ -1277,3 +1277,334 @@ b {
     font-size: 1.3rem;
   }
 }
+
+/* ---------- Voice & reading ---------- */
+.play {
+  position: relative;
+}
+.play-head {
+  gap: 6px;
+}
+.play-head .icon-btn {
+  min-width: 56px;
+  padding: 0 4px;
+}
+.icon-btn-on {
+  background: linear-gradient(180deg, #f6dd86, var(--gold));
+  color: #2a1d03;
+  border-color: var(--gold-hi);
+  box-shadow: 0 0 14px rgba(241, 215, 122, 0.45);
+}
+.mic-on {
+  background: linear-gradient(180deg, #ef5a6f, #b3142c);
+  color: #fff;
+  border-color: #ffb3be;
+  animation: micpulse 1.2s ease-in-out infinite;
+}
+@keyframes micpulse {
+  50% {
+    box-shadow: 0 0 0 6px rgba(226, 68, 92, 0.35);
+  }
+}
+.slot-reading {
+  outline: 3px solid #fff;
+  outline-offset: 1px;
+  box-shadow: 0 0 16px rgba(255, 255, 255, 0.85);
+  transform: scale(1.06);
+  z-index: 1;
+  transition: transform 0.15s;
+}
+
+.play-head-text {
+  position: relative;
+}
+.voice-banner {
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  right: 0;
+  z-index: 20;
+  border-radius: 14px;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
+  animation: slide 0.2s ease;
+  border: 2px solid;
+}
+.vb-listening {
+  background: linear-gradient(180deg, #3a0d16, #22060c);
+  border-color: var(--danger);
+}
+.vb-ok {
+  background: linear-gradient(180deg, #0f5a32, #083d21);
+  border-color: var(--ok);
+}
+.vb-bad {
+  background: linear-gradient(180deg, #4a3608, #2b1f04);
+  border-color: var(--gold);
+}
+.vb-result {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.vb-heard {
+  font-size: 0.8em;
+  overflow-wrap: anywhere;
+  color: var(--muted);
+  font-style: italic;
+}
+.vb-msg {
+  font-size: 0.95em;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+  hyphens: manual;
+  font-weight: 900;
+}
+.vb-listen {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.vb-listen > span:nth-child(2) {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  font-size: 1em;
+  min-width: 0;
+}
+.vb-listen small {
+  font-size: 0.75em;
+  color: #ffc9d1;
+}
+.vb-pulse {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--danger);
+  flex: none;
+  animation: micpulse 1s ease-in-out infinite;
+}
+.vb-stop {
+  min-height: 48px;
+  min-width: 76px;
+  border-radius: 12px;
+  background: #fff;
+  color: #9d1026;
+  font-weight: 900;
+}
+
+.help-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.help-list li {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 10px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.25);
+}
+.help-say {
+  font-weight: 900;
+  color: var(--gold-hi);
+  font-size: 1.02rem;
+}
+.help-what {
+  color: var(--ivory);
+  font-size: 0.92rem;
+}
+
+.speed-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.speed-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 50px;
+  padding: 0 14px;
+  border-radius: 12px;
+  font-weight: 800;
+  text-align: left;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1.5px solid rgba(241, 215, 122, 0.3);
+}
+.speed-on {
+  background: linear-gradient(180deg, #f6dd86, var(--gold));
+  color: #2a1d03;
+  border-color: var(--gold-hi);
+}
+.speed-bars {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 18px;
+}
+.speed-bars i {
+  width: 5px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.22);
+}
+.speed-bars i:nth-child(1) { height: 6px; }
+.speed-bars i:nth-child(2) { height: 9px; }
+.speed-bars i:nth-child(3) { height: 12px; }
+.speed-bars i:nth-child(4) { height: 15px; }
+.speed-bars i:nth-child(5) { height: 18px; }
+.speed-bars i.on {
+  background: currentColor;
+}
+
+.orient-opt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.85rem;
+  line-height: 1.1;
+  padding: 4px 0;
+}
+.orient-ic {
+  display: block;
+  border: 2.5px solid currentColor;
+  border-radius: 4px;
+}
+.orient-p {
+  width: 14px;
+  height: 22px;
+}
+.orient-l {
+  width: 22px;
+  height: 14px;
+}
+.orient-a {
+  border: 0;
+  font-size: 1.3rem;
+  line-height: 22px;
+  height: 22px;
+}
+
+/* ---------- Landscape ---------- */
+@media (orientation: landscape) and (min-aspect-ratio: 13/10) {
+  .app {
+    flex-direction: row;
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+  .tabbar {
+    order: -1;
+    grid-template-columns: 1fr;
+    grid-auto-rows: 1fr;
+    width: 92px;
+    border-top: 0;
+    border-right: 2px solid var(--gold-lo);
+    padding-bottom: 0;
+    box-shadow: 4px 0 16px rgba(0, 0, 0, 0.4);
+  }
+  .tab {
+    min-height: 0;
+    justify-content: center;
+    font-size: 0.7rem;
+  }
+  .screen {
+    max-width: 980px;
+  }
+  .play {
+    max-width: none;
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    grid-template-rows: auto auto auto minmax(0, 1fr);
+    grid-template-areas:
+      'head keys'
+      'badge keys'
+      'result keys'
+      'pool keys';
+    column-gap: 10px;
+    row-gap: 6px;
+    --slot-min: 26px;
+    --key-min: 24px;
+    overflow: hidden;
+  }
+  .play-head {
+    grid-area: head;
+  }
+  .practice-badge {
+    grid-area: badge;
+    padding: 3px;
+  }
+  .result {
+    grid-area: result;
+    min-height: 50px;
+    padding: 4px 8px;
+  }
+  .play .chip-lg {
+    width: 2.4em;
+    height: 2.4em;
+    font-size: 1.25em;
+  }
+  .undo-btn {
+    min-height: 46px;
+  }
+  .pool {
+    grid-area: pool;
+    flex: none;
+    min-height: 0;
+  }
+  .pool-grid {
+    min-height: 0;
+  }
+  .keypad {
+    grid-area: keys;
+    min-height: 0;
+  }
+  .keypad-label {
+    display: none;
+  }
+  .key-grid {
+    height: 100%;
+    grid-template-rows: repeat(6, minmax(0, 1fr));
+  }
+  .play-head .icon-btn {
+    min-height: 46px;
+  }
+  .brand-title {
+    font-size: 1.7rem;
+  }
+}
+
+/* Small phones: compact header so the pool and keypad keep their room. */
+@media (max-height: 700px) {
+  .play-head .icon-btn {
+    min-height: 48px;
+    min-width: 50px;
+  }
+  .play-head .icon-btn svg {
+    width: 22px;
+    height: 22px;
+  }
+}
+@media (max-width: 340px) {
+  .play-head .icon-btn {
+    min-width: 46px;
+    font-size: 0.6em;
+  }
+  .play-name {
+    font-size: 1em;
+  }
+}
+@media (max-width: 390px) {
+  .play-meta {
+    font-size: 0.85em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}

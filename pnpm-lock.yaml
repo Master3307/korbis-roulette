@@ -169,6 +169,12 @@ importers:
       '@capacitor-community/keep-awake':
         specifier: ^5.0.1
         version: 5.0.1(@capacitor/core@6.2.3)
+      '@capacitor-community/speech-recognition':
+        specifier: ^6.0.1
+        version: 6.0.1(@capacitor/core@6.2.3)
+      '@capacitor-community/text-to-speech':
+        specifier: ^4.1.1
+        version: 4.1.1(@capacitor/core@6.2.3)
       '@capacitor/android':
         specifier: ^6.2.3
         version: 6.2.3(@capacitor/core@6.2.3)
@@ -182,6 +188,9 @@ importers:
         specifier: ^6.0.3
         version: 6.0.3(@capacitor/core@6.2.3)
       '@capacitor/preferences':
+        specifier: ^6.0.4
+        version: 6.0.4(@capacitor/core@6.2.3)
+      '@capacitor/screen-orientation':
         specifier: ^6.0.4
         version: 6.0.4(@capacitor/core@6.2.3)
       '@capacitor/status-bar':
@@ -253,6 +262,16 @@ packages:
     peerDependencies:
       '@capacitor/core': ^6.0.0
 
+  '@capacitor-community/speech-recognition@6.0.1':
+    resolution: {integrity: sha512-/SBP+AbW9k9AWv8UEhPoIy10DvRIJV490oPswSwmY7bQdl43XYSZAG3iIABU6CfPRm0PZoIyeSco34J8vaqf2w==}
+    peerDependencies:
+      '@capacitor/core': ^6.0.0
+
+  '@capacitor-community/text-to-speech@4.1.1':
+    resolution: {integrity: sha512-OFpj9BbC3Vh5N6MipJL6w96O7+HL+n1vFl9XxOi+baj1Og2I4yA57ZcXDI2jC2dW4U2/rEuHohmLbms2/zWKaA==}
+    peerDependencies:
+      '@capacitor/core': ^6.0.0
+
   '@capacitor/android@6.2.3':
     resolution: {integrity: sha512-1x7HUUy5XdQUmAwkMcI8qz0pAmSDXGHVq0XVdCvFswqbE74VGxRuGeo7hUGcgQUWkmqXkVWzMSlAm3Z8NrmQjA==}
     peerDependencies:
@@ -283,6 +302,11 @@ packages:
 
   '@capacitor/preferences@6.0.4':
     resolution: {integrity: sha512-ziauSI1pgdyl+gduvvf8lInvzF3Wdyu/ok+u7NlnhKp8XOj9plJgtnXZWFiR8CiCK5wMvo+gFaNh3zhMyEUwpA==}
+    peerDependencies:
+      '@capacitor/core': ^6.0.0
+
+  '@capacitor/screen-orientation@6.0.4':
+    resolution: {integrity: sha512-BKuGqUGvN7hSEmotI7m8UlGRRBGd9YpAzlnQAXp9VNvKkinSkreMHPrEOiR/sG3QX/vR/BJ190tGQiICmylcTg==}
     peerDependencies:
       '@capacitor/core': ^6.0.0
 
@@ -1672,6 +1696,14 @@ snapshots:
     dependencies:
       '@capacitor/core': 6.2.3
 
+  '@capacitor-community/speech-recognition@6.0.1(@capacitor/core@6.2.3)':
+    dependencies:
+      '@capacitor/core': 6.2.3
+
+  '@capacitor-community/text-to-speech@4.1.1(@capacitor/core@6.2.3)':
+    dependencies:
+      '@capacitor/core': 6.2.3
+
   '@capacitor/android@6.2.3(@capacitor/core@6.2.3)':
     dependencies:
       '@capacitor/core': 6.2.3
@@ -1730,6 +1762,10 @@ snapshots:
       '@capacitor/core': 6.2.3
 
   '@capacitor/preferences@6.0.4(@capacitor/core@6.2.3)':
+    dependencies:
+      '@capacitor/core': 6.2.3
+
+  '@capacitor/screen-orientation@6.0.4(@capacitor/core@6.2.3)':
     dependencies:
       '@capacitor/core': 6.2.3
 

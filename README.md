@@ -22,6 +22,12 @@ A simple Android app (German / English) for logging roulette numbers in a
   hot/cold numbers, sleepers, red/black/zero, even/odd, 1–18/19–36, dozens,
   columns, wheel sectors (Voisins/Tiers/Orphelins), streaks, longest absence,
   wheel view, frequency of all 37 numbers, history (tap a spin to delete it).
+- **Read aloud**: the pool numbers are read from slot 1 to the last, over and over, in the
+  app language, with 5 speeds. Toggle with the "Vorlesen" button on the play screen.
+- **Voice input** (German and English): tap "Sprechen" and say the number. Also understands
+  "rückgängig"/"undo", "lösch die 17", "falsch, 17", "vorlesen", "stopp", "hilfe".
+  Optional hands-free mode. The app never listens while it is speaking.
+- Portrait (default), landscape or automatic screen orientation.
 - Large, easy-to-read controls, text size setting, vibration, screen stays on.
 
 ## Development

@@ -320,7 +320,7 @@ function History({ spins, t, onDelete }: { spins: Spin[]; t: Strings; onDelete: 
       </div>
       {!showAll && list.length > 60 && (
         <button className="btn btn-plain" onClick={() => setShowAll(true)}>
-          … {list.length - 60}
+          {t.more} (+{list.length - 60})
         </button>
       )}
     </Card>

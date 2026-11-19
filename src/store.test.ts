@@ -75,6 +75,15 @@ describe('store', () => {
     expect(analyzeSpins(active().spins).recency.slice(0, 2)).toEqual([2, 1]);
   });
 
+  it('replaces the last spin (voice correction)', () => {
+    st().startSession({ poolSize: 24, practice: false });
+    st().addSpin(5);
+    st().addSpin(8);
+    st().replaceLastSpin(17);
+    st().replaceLastSpin(99);
+    expect(active().spins.map((s) => s.n)).toEqual([5, 17]);
+  });
+
   it('loads damaged persisted data safely', async () => {
     const bad = {
       state: {
@@ -84,7 +93,7 @@ describe('store', () => {
           { foo: 1 },
         ],
         activeId: 'missing',
-        settings: { lang: 'en' },
+        settings: { lang: 'en', readSpeed: 42, orientation: 'sideways', readAloud: 'yes' },
       },
       version: 1,
     };
@@ -96,5 +105,9 @@ describe('store', () => {
     expect(st().activeId).toBeNull();
     expect(st().settings.lang).toBe('en');
     expect(st().settings.haptics).toBe(true);
+    expect(st().settings.readSpeed).toBe(1);
+    expect(st().settings.orientation).toBe('portrait');
+    expect(st().settings.readAloud).toBe(true);
+    expect(st().settings.voiceInput).toBe(false);
   });
 });

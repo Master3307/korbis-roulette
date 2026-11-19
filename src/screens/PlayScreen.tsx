@@ -7,6 +7,8 @@ import { Chip, Stepper, Toggle } from '../ui/components';
 import { confirmDialog, openDialog, Sheet } from '../ui/dialog';
 import { IconMenu, IconUndo } from '../ui/icons';
 import { NewSession } from './NewSession';
+import { MicButton, ReadToggleButton, VoiceBanner, openVoiceHelpSheet } from '../ui/VoiceUi';
+import { useVoiceUi } from '../voiceControl';
 import { EditSessionSheet } from './SessionsScreen';
 
 const KEYPAD_ROWS = [
@@ -28,6 +30,8 @@ function ActivePlay({ session }: { session: Session }) {
   const t = useT();
   const addSpin = useStore((s) => s.addSpin);
   const undoSpin = useStore((s) => s.undoSpin);
+  const voiceInput = useStore((s) => s.settings.voiceInput);
+  const readingIndex = useVoiceUi((s) => s.readingIndex);
 
   const { pool, counts, lastStep } = useMemo(() => {
     const a = analyzeSpins(session.spins);
@@ -49,14 +53,17 @@ function ActivePlay({ session }: { session: Session }) {
     <div className={`screen play ${session.poolSize > 24 ? 'play-big-pool' : ''}`}>
       <header className="play-head">
         <div className="play-head-text">
+          <VoiceBanner />
           <div className="play-name">{session.name}</div>
           <div className="play-meta">
-            {t.spin} <b>{session.spins.length}</b> · {t.pool}{' '}
+            {t.spin} <b>{session.spins.length}</b> ·{' '}
             <b>
               {pool.length}/{session.poolSize}
             </b>
           </div>
         </div>
+        <ReadToggleButton />
+        {voiceInput && <MicButton />}
         <button className="icon-btn" onClick={() => openSessionMenu(session)} aria-label={t.menu}>
           <IconMenu />
           <span>{t.menu}</span>
@@ -111,7 +118,7 @@ function ActivePlay({ session }: { session: Session }) {
             return (
               <div
                 key={i}
-                className={`slot ${n === undefined ? 'slot-empty' : `slot-${colorOf(n)}`} ${isNextOut ? 'slot-out' : ''} ${i === 0 && n !== undefined ? 'slot-top' : ''}`}
+                className={`slot ${n === undefined ? 'slot-empty' : `slot-${colorOf(n)}`} ${isNextOut ? 'slot-out' : ''} ${i === 0 && n !== undefined ? 'slot-top' : ''} ${readingIndex === i ? 'slot-reading' : ''}`}
               >
                 <span className="slot-pos">{i + 1}</span>
                 {n === undefined ? (
@@ -165,6 +172,8 @@ function SessionMenu({ sessionId, close }: { sessionId: string; close: () => voi
   const setPoolSize = useStore((s) => s.setPoolSize);
   const updateSession = useStore((s) => s.updateSession);
   const endSession = useStore((s) => s.endSession);
+  const settings = useStore((s) => s.settings);
+  const updateSettings = useStore((s) => s.updateSettings);
   if (!session) return null;
   return (
     <Sheet title={session.name}>
@@ -178,7 +187,20 @@ function SessionMenu({ sessionId, close }: { sessionId: string; close: () => voi
         label={t.practiceMode}
         hint={t.practiceModeHint}
       />
+      <Toggle checked={settings.readAloud} onChange={(v) => updateSettings({ readAloud: v })} label={t.readAloud} hint={t.readAloudHint} />
+      <Toggle checked={settings.voiceInput} onChange={(v) => updateSettings({ voiceInput: v })} label={t.voiceInput} hint={t.voiceInputHint} />
       <div className="sheet-buttons">
+        {settings.voiceInput && (
+          <button
+            className="btn btn-plain btn-lg"
+            onClick={() => {
+              close();
+              openVoiceHelpSheet();
+            }}
+          >
+            🎤 {t.voiceHelp}
+          </button>
+        )}
         <button
           className="btn btn-plain btn-lg"
           onClick={() => {

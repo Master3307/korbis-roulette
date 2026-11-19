@@ -7,7 +7,9 @@ import { PlayScreen } from './screens/PlayScreen';
 import { StatsScreen } from './screens/StatsScreen';
 import { SessionsScreen } from './screens/SessionsScreen';
 import { SettingsScreen } from './screens/SettingsScreen';
-import { applyKeepAwake, setupStatusBar, tapFeedback } from './native';
+import { applyKeepAwake, applyOrientation, setupStatusBar, tapFeedback } from './native';
+import { initVoiceControl, registerVoiceHelp, setAppVisible } from './voiceControl';
+import { openVoiceHelpSheet } from './ui/VoiceUi';
 
 export function App() {
   const t = useT();
@@ -17,6 +19,17 @@ export function App() {
   const textScale = useStore((s) => s.settings.textScale);
   const keepAwake = useStore((s) => s.settings.keepAwake);
   const lang = useStore((s) => s.settings.lang);
+  const orientation = useStore((s) => s.settings.orientation);
+
+  useEffect(() => {
+    applyOrientation(orientation);
+  }, [orientation]);
+
+  useEffect(() => {
+    if (!hydrated) return;
+    registerVoiceHelp(openVoiceHelpSheet);
+    initVoiceControl();
+  }, [hydrated]);
 
   useEffect(() => {
     document.documentElement.style.fontSize = `${16 * textScale}px`;
@@ -41,8 +54,13 @@ export function App() {
       }
       CapApp.minimizeApp();
     });
+    const state = CapApp.addListener('appStateChange', ({ isActive }) => setAppVisible(isActive));
+    const onVis = () => setAppVisible(document.visibilityState === 'visible');
+    document.addEventListener('visibilitychange', onVis);
     return () => {
       sub.then((h) => h.remove());
+      state.then((h) => h.remove());
+      document.removeEventListener('visibilitychange', onVis);
     };
   }, []);
 

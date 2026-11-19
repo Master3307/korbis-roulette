@@ -20,12 +20,23 @@ export interface Session {
 export type TextScale = 1 | 1.15 | 1.3;
 export type Tab = 'play' | 'stats' | 'sessions' | 'settings';
 
+export type Orientation = 'portrait' | 'landscape' | 'auto';
+
+/** Reading speeds, slowest first. Index is stored. */
+export const READ_RATES = [0.5, 0.7, 0.9, 1.1, 1.35] as const;
+
 export interface Settings {
   lang: Lang;
   textScale: TextScale;
   haptics: boolean;
   keepAwake: boolean;
   defaultPoolSize: number;
+  readAloud: boolean;
+  /** Index into READ_RATES. */
+  readSpeed: number;
+  voiceInput: boolean;
+  handsFree: boolean;
+  orientation: Orientation;
 }
 
 interface State {
@@ -42,6 +53,7 @@ interface State {
   startSession(opts: { name?: string; poolSize: number; practice: boolean }): void;
   addSpin(n: number): void;
   undoSpin(): void;
+  replaceLastSpin(n: number): void;
   deleteSpin(sessionId: string, index: number): void;
   setPoolSize(size: number): void;
   updateSession(id: string, patch: Partial<Pick<Session, 'name' | 'practice'>>): void;
@@ -92,6 +104,11 @@ export const useStore = create<State>()(
         haptics: true,
         keepAwake: true,
         defaultPoolSize: DEFAULT_POOL,
+        readAloud: false,
+        readSpeed: 1,
+        voiceInput: false,
+        handsFree: false,
+        orientation: 'portrait',
       },
       tab: 'play',
       viewSessionId: null,
@@ -128,6 +145,15 @@ export const useStore = create<State>()(
       addSpin: (n) => {
         if (!isValidNumber(n)) return;
         set((st) => patchActive(st, (s) => ({ ...s, spins: [...s.spins, { n, t: Date.now(), size: s.poolSize }] })));
+      },
+
+      replaceLastSpin: (n) => {
+        if (!isValidNumber(n)) return;
+        set((st) =>
+          patchActive(st, (s) =>
+            s.spins.length ? { ...s, spins: [...s.spins.slice(0, -1), { n, t: Date.now(), size: s.poolSize }] } : s,
+          ),
+        );
       },
 
       undoSpin: () => set((st) => patchActive(st, (s) => ({ ...s, spins: s.spins.slice(0, -1) }))),
@@ -230,7 +256,19 @@ function sanitize(persisted: unknown, current: State): State {
     ...current,
     sessions,
     activeId,
-    settings: { ...current.settings, ...(p.settings ?? {}) },
+    settings: sanitizeSettings({ ...current.settings, ...(p.settings ?? {}) }, current.settings),
+  };
+}
+
+function sanitizeSettings(s: Settings, d: Settings): Settings {
+  return {
+    ...s,
+    lang: s.lang === 'en' ? 'en' : s.lang === 'de' ? 'de' : d.lang,
+    readSpeed: Number.isInteger(s.readSpeed) && s.readSpeed >= 0 && s.readSpeed < READ_RATES.length ? s.readSpeed : d.readSpeed,
+    orientation: ['portrait', 'landscape', 'auto'].includes(s.orientation) ? s.orientation : 'portrait',
+    readAloud: !!s.readAloud,
+    voiceInput: !!s.voiceInput,
+    handsFree: !!s.handsFree,
   };
 }
 
