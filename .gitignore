@@ -1,0 +1,12 @@
+node_modules/
+dist/
+dist-apk/
+*.log
+.DS_Store
+coverage/
+
+# Android signing – NEVER commit
+*.jks
+*.keystore
+keystore.properties
+android/keystore.properties

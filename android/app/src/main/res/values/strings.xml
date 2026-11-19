@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Korbi\'s Roulette Logging</string>
+    <string name="title_activity_main">Korbi\'s Roulette Logging</string>
+    <string name="package_name">com.korbi.roulettelogging</string>
+    <string name="custom_url_scheme">com.korbi.roulettelogging</string>
+</resources>

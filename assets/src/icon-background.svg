@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024"><defs>
+<linearGradient id="gold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff3c4"/><stop offset=".45" stop-color="#f1d77a"/><stop offset=".8" stop-color="#d4af37"/><stop offset="1" stop-color="#8a6d1e"/></linearGradient>
+<radialGradient id="felt" cx=".5" cy=".35" r=".75"><stop offset="0" stop-color="#1b7146"/><stop offset="1" stop-color="#062615"/></radialGradient>
+<radialGradient id="cone" cx=".5" cy=".4" r=".6"><stop offset="0" stop-color="#1d6b44"/><stop offset="1" stop-color="#08301c"/></radialGradient>
+</defs><rect width="1024" height="1024" fill="url(#felt)"/></svg>

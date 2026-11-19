@@ -1,0 +1,83 @@
+apply plugin: 'com.android.application'
+
+import groovy.json.JsonSlurper
+
+// ---- Versioning: single source of truth is package.json "version" (SemVer) ----
+// versionCode = MAJOR * 10000 + MINOR * 100 + PATCH  (e.g. 1.2.3 -> 10203)
+def pkg = new JsonSlurper().parse(file('../../package.json'))
+def appVersionName = pkg.version
+def (vMajor, vMinor, vPatch) = appVersionName.tokenize('.-')[0..2].collect { it as int }
+def appVersionCode = vMajor * 10000 + vMinor * 100 + vPatch
+
+// ---- Release signing: keystore.properties (local) or env vars (CI) ----
+def keystorePropsFile = rootProject.file('keystore.properties')
+def keystoreProps = new Properties()
+if (keystorePropsFile.exists()) keystorePropsFile.withInputStream { keystoreProps.load(it) }
+def signValue = { String prop, String env -> keystoreProps.getProperty(prop) ?: System.getenv(env) }
+def releaseStoreFile = signValue('storeFile', 'KR_KEYSTORE_FILE')
+def hasReleaseSigning = releaseStoreFile && file(releaseStoreFile).exists()
+
+android {
+    namespace "com.korbi.roulettelogging"
+    compileSdk rootProject.ext.compileSdkVersion
+    defaultConfig {
+        applicationId "com.korbi.roulettelogging"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode appVersionCode
+        versionName appVersionName
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        aaptOptions {
+             // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
+             // Default: https://android.googlesource.com/platform/frameworks/base/+/282e181b58cf72b6ca770dc7ca5f91f135444502/tools/aapt/AaptAssets.cpp#61
+            ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
+        }
+    }
+    signingConfigs {
+        if (hasReleaseSigning) {
+            release {
+                storeFile file(releaseStoreFile)
+                storePassword signValue('storePassword', 'KR_KEYSTORE_PASSWORD')
+                keyAlias signValue('keyAlias', 'KR_KEY_ALIAS')
+                keyPassword signValue('keyPassword', 'KR_KEY_PASSWORD')
+            }
+        }
+    }
+    buildTypes {
+        release {
+            // Without a keystore the release APK is signed with the debug key so it still installs.
+            signingConfig hasReleaseSigning ? signingConfigs.release : signingConfigs.debug
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+repositories {
+    flatDir{
+        dirs '../capacitor-cordova-android-plugins/src/main/libs', 'libs'
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
+    implementation "androidx.coordinatorlayout:coordinatorlayout:$androidxCoordinatorLayoutVersion"
+    implementation "androidx.core:core-splashscreen:$coreSplashScreenVersion"
+    implementation project(':capacitor-android')
+    testImplementation "junit:junit:$junitVersion"
+    androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
+    implementation project(':capacitor-cordova-android-plugins')
+}
+
+apply from: 'capacitor.build.gradle'
+
+try {
+    def servicesJSON = file('google-services.json')
+    if (servicesJSON.text) {
+        apply plugin: 'com.google.gms.google-services'
+    }
+} catch(Exception e) {
+    logger.info("google-services.json not found, google-services plugin not applied. Push Notifications won't work")
+}
