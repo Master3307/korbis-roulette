@@ -103,7 +103,7 @@ function SessionStats({ session }: { session: Session }) {
 
           <HotCold stats={stats} t={t} />
 
-          <NeighbourStats hot={hotNumbers(session.spins, 6)} counts={stats.counts} total={stats.total} t={t} />
+          <NeighbourStats hot={hotNumbers(session.spins, 6)} counts={stats.counts} total={stats.total} t={t} pool={pool} />
 
           <Card title={t.sleepers}>
             <div className="chip-list">
@@ -340,12 +340,13 @@ function History({ spins, t, onDelete }: { spins: Spin[]; t: Strings; onDelete: 
   );
 }
 
-function NeighbourStats({ hot, counts, total, t }: { hot: number[]; counts: number[]; total: number; t: Strings }) {
+function NeighbourStats({ hot, counts, total, t, pool }: { hot: number[]; counts: number[]; total: number; t: Strings; pool?: number[] }) {
+  const inPool = new Set(pool ?? []);
   const l = useStore((s) => s.settings.neighbourLeft);
   const r = useStore((s) => s.settings.neighbourRight);
   if (!hot.length) return null;
   return (
-    <Card title={`🎯 ${t.nbStatsTitle(l, r)}`}>
+    <Card title={`🎯 ${t.nbStatsTitle(l, r)}`} right={pool ? <span className="hint"><i className="dot" /> {t.inPoolLegend}</span> : undefined}>
       {hot.map((n) => {
         const group = wheelNeighbours(n, l, r);
         const size = new Set(group).size;
@@ -354,7 +355,7 @@ function NeighbourStats({ hot, counts, total, t }: { hot: number[]; counts: numb
           <div className="nb-stat" key={n}>
             <div className="nb-group">
               {group.map((x, i) => (
-                <span key={i} className={`nb-cell ${x === n ? 'nb-center' : ''}`}>
+                <span key={i} className={`nb-cell ${x === n ? 'nb-center' : ''} ${inPool.has(x) ? 'nb-in-pool' : ''}`}>
                   <Chip n={x} size="sm" />
                 </span>
               ))}

@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.3.0 – 2026-11-19
+
+- **Bigger, clearer app icon**: the roulette wheel now fills the whole icon with a large
+  "Korbi's" in the middle (before it was shrunk to about a third of the icon).
+  Icon layers are rendered at full resolution for every screen density, so it stays sharp.
+- Neighbour mode: neighbours that are currently in the pool get the same gold frame and dot
+  as on the keypad (also in the statistics).
+- `pnpm icons` now automatically removes the extra icon padding that @capacitor/assets adds.
+
 ## 1.2.0 – 2026-11-19
 
 - **Neighbour mode ("Nachbarn")**: shows the hottest number(s) of the session with their

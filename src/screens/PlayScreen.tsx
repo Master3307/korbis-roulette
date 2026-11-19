@@ -144,7 +144,7 @@ function ActivePlay({ session }: { session: Session }) {
 
       <section className="keypad" aria-label={t.tapNumber}>
         {neighbourMode ? (
-          <NeighbourStrip spins={session.spins} />
+          <NeighbourStrip spins={session.spins} pool={pool} />
         ) : (
           <div className="keypad-label">
             <span>{t.tapNumber}</span>

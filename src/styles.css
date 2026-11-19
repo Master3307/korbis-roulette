@@ -1957,3 +1957,24 @@ b {
   height: 2.5em;
   font-size: 1.05em;
 }
+
+/* Neighbours that are currently in the pool: same gold frame + dot as the keypad. */
+.nb-in-pool .chip {
+  box-shadow:
+    0 0 0 2.5px var(--gold-hi),
+    0 0 8px rgba(241, 215, 122, 0.7);
+}
+.nb-in-pool::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--gold-hi);
+  box-shadow: 0 0 5px var(--gold-hi);
+}
+.nb-center.nb-in-pool .chip {
+  outline-color: #9fd8ff;
+}

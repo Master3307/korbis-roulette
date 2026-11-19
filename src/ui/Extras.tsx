@@ -10,7 +10,7 @@ import { tapFeedback } from '../native';
 // ------------------------------------------------------------ neighbours
 
 /** Strip on the play screen: hottest numbers with their wheel neighbours. */
-export function NeighbourStrip({ spins }: { spins: Spin[] }) {
+export function NeighbourStrip({ spins, pool }: { spins: Spin[]; pool: number[] }) {
   const t = useT();
   const { neighbourLeft: l, neighbourRight: r, neighbourCount: k } = useStore((s) => s.settings);
   const counts = useMemo(() => {
@@ -19,6 +19,7 @@ export function NeighbourStrip({ spins }: { spins: Spin[] }) {
     return c;
   }, [spins]);
   const hot = useMemo(() => hotNumbers(spins, k), [spins, k]);
+  const inPool = new Set(pool);
 
   return (
     <div className="nb-strip" aria-label={t.nbShort}>
@@ -36,7 +37,7 @@ export function NeighbourStrip({ spins }: { spins: Spin[] }) {
           {hot.map((n) => (
             <div className="nb-group" key={n}>
               {wheelNeighbours(n, l, r).map((x, i) => (
-                <span key={i} className={`nb-cell ${x === n ? 'nb-center' : ''}`}>
+                <span key={i} className={`nb-cell ${x === n ? 'nb-center' : ''} ${inPool.has(x) ? 'nb-in-pool' : ''}`}>
                   <Chip n={x} size="sm" />
                   {x === n && (
                     <small className="nb-count">

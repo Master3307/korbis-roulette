@@ -15,7 +15,7 @@
     "sync": "pnpm build && cap sync android",
     "apk": "pnpm sync && node scripts/build-apk.mjs",
     "apk:install": "adb install -r dist-apk/KorbisRoulette-latest.apk",
-    "icons": "capacitor-assets generate --android --iconBackgroundColor '#0b3d24' --iconBackgroundColorDark '#0b3d24' --splashBackgroundColor '#0b3d24' --splashBackgroundColorDark '#0b3d24'",
+    "icons": "capacitor-assets generate --android --iconBackgroundColor '#0b3d24' --iconBackgroundColorDark '#0b3d24' --splashBackgroundColor '#0b3d24' --splashBackgroundColorDark '#0b3d24' && node scripts/fix-adaptive-icons.mjs",
     "release": "node scripts/release.mjs"
   },
   "dependencies": {
