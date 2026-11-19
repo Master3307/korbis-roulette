@@ -40,6 +40,8 @@ describe('voice: commands', () => {
     ['vorlesen aus', 'readOff'], ['stop reading', 'readOff'], ['vorlesen stopp', 'readOff'],
     ['stopp', 'stop'], ['stop', 'stop'], ['ruhe', 'stop'], ['quiet', 'stop'],
     ['hilfe', 'help'], ['help', 'help'], ['was kann ich sagen hilfe', 'help'],
+    ['nachbarn', 'neighboursOn'], ['Nachbarn an', 'neighboursOn'], ['nachbarn aus', 'neighboursOff'],
+    ['show neighbours', 'neighboursOn'], ['neighbors off', 'neighboursOff'],
     ['blabla', 'unknown'], ['', 'unknown'],
   ])('%s -> %s', (t, k) => expect(parseVoice(t).kind).toBe(k));
 

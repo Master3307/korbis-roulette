@@ -69,3 +69,18 @@ export function neighbours(n: number, k = 2): number[] {
 export function expectedDistinct(spins: number): number {
   return 37 * (1 - Math.pow(36 / 37, spins));
 }
+
+/**
+ * A number with its wheel neighbours ("Nachbarn"), in wheel order:
+ * `left` pockets counter-clockwise, the number, `right` pockets clockwise.
+ * Example: wheelNeighbours(0, 2, 2) -> [3, 26, 0, 32, 15].
+ */
+export function wheelNeighbours(n: number, left: number, right: number): number[] {
+  const i = WHEEL_ORDER.indexOf(n as (typeof WHEEL_ORDER)[number]);
+  if (i === -1) return [];
+  const l = Math.max(0, Math.min(18, Math.floor(left)));
+  const r = Math.max(0, Math.min(18, Math.floor(right)));
+  const out: number[] = [];
+  for (let d = -l; d <= r; d++) out.push(WHEEL_ORDER[(i + d + 37 * 2) % 37]);
+  return out;
+}

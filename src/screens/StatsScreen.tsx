@@ -15,6 +15,9 @@ import { useStore, useT, type Session } from '../store';
 import { Card, Chip, Segmented, ShareBar, StatTile } from '../ui/components';
 import { confirmDialog } from '../ui/dialog';
 import { Wheel } from '../ui/Wheel';
+import { wheelNeighbours } from '../logic/roulette';
+import { groupHits, hotNumbers } from '../logic/stats';
+import { openAbout } from '../ui/Extras';
 import type { Strings } from '../i18n/strings';
 
 type View = 'session' | 'overall';
@@ -83,7 +86,14 @@ function SessionStats({ session }: { session: Session }) {
       ) : (
         <>
           <KeyFigures stats={stats} t={t} />
-          <Card title={t.lawOfThird}>
+          <Card
+            title={t.lawOfThird}
+            right={
+              <button className="info-btn" onClick={openAbout}>
+                ℹ {t.aboutWhat}
+              </button>
+            }
+          >
             <p className="big-line">{t.lawOfThirdText(law.distinct, law.window, law.expected.toFixed(1))}</p>
           </Card>
 
@@ -92,6 +102,8 @@ function SessionStats({ session }: { session: Session }) {
           </Card>
 
           <HotCold stats={stats} t={t} />
+
+          <NeighbourStats hot={hotNumbers(session.spins, 6)} counts={stats.counts} total={stats.total} t={t} />
 
           <Card title={t.sleepers}>
             <div className="chip-list">
@@ -145,6 +157,7 @@ function OverallStats({ sessions }: { sessions: Session[] }) {
             <Wheel mode="heat" counts={stats.counts} />
           </Card>
           <HotCold stats={stats} t={t} />
+          <NeighbourStats hot={ranked(stats.counts).filter((n) => stats.counts[n] > 0).slice(0, 6)} counts={stats.counts} total={stats.total} t={t} />
           <Chances stats={stats} t={t} />
           <Streaks stats={stats} t={t} />
           <Frequency counts={stats.counts} t={t} />
@@ -323,6 +336,33 @@ function History({ spins, t, onDelete }: { spins: Spin[]; t: Strings; onDelete: 
           {t.more} (+{list.length - 60})
         </button>
       )}
+    </Card>
+  );
+}
+
+function NeighbourStats({ hot, counts, total, t }: { hot: number[]; counts: number[]; total: number; t: Strings }) {
+  const l = useStore((s) => s.settings.neighbourLeft);
+  const r = useStore((s) => s.settings.neighbourRight);
+  if (!hot.length) return null;
+  return (
+    <Card title={`🎯 ${t.nbStatsTitle(l, r)}`}>
+      {hot.map((n) => {
+        const group = wheelNeighbours(n, l, r);
+        const size = new Set(group).size;
+        const hits = groupHits(counts, group);
+        return (
+          <div className="nb-stat" key={n}>
+            <div className="nb-group">
+              {group.map((x, i) => (
+                <span key={i} className={`nb-cell ${x === n ? 'nb-center' : ''}`}>
+                  <Chip n={x} size="sm" />
+                </span>
+              ))}
+            </div>
+            <div className="nb-stat-text">{t.nbStatsHits(hits, fmt(pct(hits, total)), fmt((size / 37) * 100))}</div>
+          </div>
+        );
+      })}
     </Card>
   );
 }

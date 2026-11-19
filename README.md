@@ -27,6 +27,10 @@ A simple Android app (German / English) for logging roulette numbers in a
 - **Voice input** (German and English): tap "Sprechen" and say the number. Also understands
   "rückgängig"/"undo", "lösch die 17", "falsch, 17", "vorlesen", "stopp", "hilfe".
   Optional hands-free mode. The app never listens while it is speaking.
+- **Neighbour mode** ("Nachbarn", e.g. 2·2): the hottest numbers with their wheel neighbours,
+  plus statistics on how often those wheel areas were hit.
+- Built-in guide ("So funktioniert's") and an explanation of the two-thirds law.
+- Responsible-gambling help page (free German helpline, check-dein-spiel.de, OASIS self-exclusion).
 - Portrait (default), landscape or automatic screen orientation.
 - Large, easy-to-read controls, text size setting, vibration, screen stays on.
 

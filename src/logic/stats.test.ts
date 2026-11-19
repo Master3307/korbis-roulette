@@ -88,3 +88,30 @@ describe('stats', () => {
     expect(ranked(c).slice(0, 3)).toEqual([2, 5, 9]);
   });
 });
+
+import { wheelNeighbours } from './roulette';
+import { groupHits, hotNumbers } from './stats';
+
+describe('neighbours (Nachbarn)', () => {
+  it('2·2 around zero', () => expect(wheelNeighbours(0, 2, 2)).toEqual([3, 26, 0, 32, 15]));
+  it('2·2 around 17', () => expect(wheelNeighbours(17, 2, 2)).toEqual([2, 25, 17, 34, 6]));
+  it('asymmetric 1·3', () => expect(wheelNeighbours(26, 1, 3)).toEqual([3, 26, 0, 32, 15]));
+  it('0·0 is just the number', () => expect(wheelNeighbours(5, 0, 0)).toEqual([5]));
+  it('wraps around the wheel end', () => expect(wheelNeighbours(26, 0, 2)).toEqual([26, 0, 32]));
+  it('invalid number', () => expect(wheelNeighbours(40, 2, 2)).toEqual([]));
+});
+
+describe('hot numbers', () => {
+  const sp = (a: number[]) => a.map((n, i) => ({ n, t: i, size: 24 }));
+  it('most frequent first, ties -> more recent', () => {
+    expect(hotNumbers(sp([5, 17, 5, 9, 17, 3]), 3)).toEqual([17, 5, 3]);
+  });
+  it('never returns numbers that did not fall', () => expect(hotNumbers(sp([1]), 5)).toEqual([1]));
+  it('empty', () => expect(hotNumbers([], 3)).toEqual([]));
+  it('group hits counts each number once', () => {
+    const c = Array(37).fill(0);
+    c[17] = 3;
+    c[2] = 1;
+    expect(groupHits(c, [2, 25, 17, 34, 6, 17])).toBe(4);
+  });
+});

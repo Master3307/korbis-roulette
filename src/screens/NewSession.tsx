@@ -3,6 +3,7 @@ import { MAX_POOL, MIN_POOL } from '../logic/pool';
 import { formatDateTime, useStore, useT } from '../store';
 import { Card, Stepper, Toggle } from '../ui/components';
 import { tapFeedback } from '../native';
+import { GamblingNote, openAbout, openHowTo } from '../ui/Extras';
 
 export function NewSession() {
   const t = useT();
@@ -10,7 +11,8 @@ export function NewSession() {
   const defaultSize = useStore((s) => s.settings.defaultPoolSize);
   const startSession = useStore((s) => s.startSession);
   const resumeSession = useStore((s) => s.resumeSession);
-  const last = useStore((s) => s.sessions[0]);
+  const sessions = useStore((s) => s.sessions);
+  const last = sessions.reduce<(typeof sessions)[number] | undefined>((a, b) => (!a || b.updatedAt > a.updatedAt ? b : a), undefined);
   const [size, setSize] = useState(defaultSize);
   const [name, setName] = useState('');
   const [practice, setPractice] = useState(false);
@@ -20,6 +22,15 @@ export function NewSession() {
       <div className="brand">
         <div className="brand-title">Korbi's Roulette</div>
         <div className="brand-sub">Logging</div>
+      </div>
+
+      <div className="intro-btns">
+        <button className="btn btn-plain howto-btn" onClick={openHowTo}>
+          ❔ {t.howButton}
+        </button>
+        <button className="btn btn-plain howto-btn" onClick={openAbout}>
+          ℹ {t.aboutButton}
+        </button>
       </div>
 
       <Card title={t.poolSizeQuestion}>
@@ -60,6 +71,8 @@ export function NewSession() {
           </small>
         </button>
       )}
+
+      <GamblingNote />
     </div>
   );
 }

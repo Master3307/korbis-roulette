@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.2.0 – 2026-11-19
+
+- **Neighbour mode ("Nachbarn")**: shows the hottest number(s) of the session with their
+  neighbours on the wheel, e.g. 2·2 = two left, two right (17 → 2 25 **17** 34 6).
+  Left and right set separately (0–4), quick choice 1·1 … 4·4, 1–6 hot numbers.
+  Strip above the keypad; toggle in the session menu, settings or by voice ("Nachbarn").
+- Statistics: hot numbers with neighbours and how often that wheel area was hit vs. chance.
+- **"How it works" guide** (opens once on first start, available any time) and
+  **"What is this app for?"** page explaining the two-thirds law (law of the third).
+- **Responsible gambling**: help page with warning signs, tips, the free German helpline
+  0800 1 37 27 00 (tap to call), check-dein-spiel.de, Gamblers Anonymous and OASIS
+  self-exclusion; short note on the start and settings screens.
+- Fix: "Continue" on the start screen now picks the most recently used session.
+
 ## 1.1.0 – 2026-11-19
 
 - **Read aloud**: reads the pool numbers from slot 1 to the last one in an endless loop,

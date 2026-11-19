@@ -2,6 +2,7 @@ import { MAX_POOL, MIN_POOL } from '../logic/pool';
 import { READ_RATES, useStore, useT, type Orientation, type TextScale } from '../store';
 import { speak, stopSpeaking } from '../speech';
 import { openVoiceHelpSheet } from '../ui/VoiceUi';
+import { GamblingNote, NeighbourSettings, openAbout, openGamblingHelp, openHowTo } from '../ui/Extras';
 import { Card, Segmented, Stepper, Toggle } from '../ui/components';
 import { confirmDialog, openDialog, Sheet } from '../ui/dialog';
 
@@ -16,6 +17,14 @@ export function SettingsScreen() {
   return (
     <div className="screen screen-scroll">
       <h1 className="screen-title">{t.tabSettings}</h1>
+      <div className="intro-btns">
+        <button className="btn btn-plain howto-btn" onClick={openHowTo}>
+          ❔ {t.howButton}
+        </button>
+        <button className="btn btn-plain howto-btn" onClick={openAbout}>
+          ℹ {t.aboutButton}
+        </button>
+      </div>
 
       <Card title={t.language}>
         <Segmented
@@ -95,6 +104,10 @@ export function SettingsScreen() {
         )}
       </Card>
 
+      <Card title={`🎯 ${t.nbMode}`}>
+        <NeighbourSettings />
+      </Card>
+
       <Card title={t.orientation}>
         <Segmented<Orientation>
           value={settings.orientation}
@@ -145,6 +158,13 @@ export function SettingsScreen() {
         </button>
       </Card>
 
+      <Card title={`♥ ${t.rgTitle}`}>
+        <p className="disclaimer">{t.rgIntro}</p>
+        <button className="btn btn-gold btn-lg" onClick={openGamblingHelp}>
+          {t.rgButton}
+        </button>
+      </Card>
+
       <Card title={t.about}>
         <div className="about-name">{t.appName}</div>
         <p className="hint">
@@ -152,6 +172,7 @@ export function SettingsScreen() {
         </p>
         <p className="disclaimer">{t.disclaimer}</p>
       </Card>
+      <GamblingNote />
     </div>
   );
 }

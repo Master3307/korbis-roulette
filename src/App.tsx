@@ -10,6 +10,7 @@ import { SettingsScreen } from './screens/SettingsScreen';
 import { applyKeepAwake, applyOrientation, setupStatusBar, tapFeedback } from './native';
 import { initVoiceControl, registerVoiceHelp, setAppVisible } from './voiceControl';
 import { openVoiceHelpSheet } from './ui/VoiceUi';
+import { openHowTo } from './ui/Extras';
 
 export function App() {
   const t = useT();
@@ -29,6 +30,10 @@ export function App() {
     if (!hydrated) return;
     registerVoiceHelp(openVoiceHelpSheet);
     initVoiceControl();
+    if (!useStore.getState().settings.seenIntro) {
+      openHowTo();
+      useStore.getState().updateSettings({ seenIntro: true });
+    }
   }, [hydrated]);
 
   useEffect(() => {

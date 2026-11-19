@@ -184,3 +184,27 @@ export function ranked(counts: readonly number[]): number[] {
     .sort((a, b) => b.c - a.c || a.n - b.n)
     .map((x) => x.n);
 }
+
+/**
+ * The `k` most frequent numbers (at least one hit), most frequent first.
+ * Ties go to the number that fell more recently.
+ */
+export function hotNumbers(spins: readonly Spin[], k: number): number[] {
+  const counts = Array(37).fill(0) as number[];
+  const last = Array(37).fill(-1) as number[];
+  spins.forEach((s, i) => {
+    counts[s.n]++;
+    last[s.n] = i;
+  });
+  return counts
+    .map((c, n) => ({ n, c, l: last[n] }))
+    .filter((x) => x.c > 0)
+    .sort((a, b) => b.c - a.c || b.l - a.l)
+    .slice(0, Math.max(0, k))
+    .map((x) => x.n);
+}
+
+/** Total hits on a group of numbers (each number counted once). */
+export function groupHits(counts: readonly number[], numbers: readonly number[]): number {
+  return [...new Set(numbers)].reduce((sum, n) => sum + (counts[n] ?? 0), 0);
+}

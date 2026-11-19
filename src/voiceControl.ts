@@ -212,6 +212,14 @@ export function applyCommand(cmd: VoiceCommand, heard: string): string | null {
       st.updateSettings({ readAloud: false });
       feedback(heard, s.heardStop, true);
       return null;
+    case 'neighboursOn':
+      st.updateSettings({ neighbourMode: true });
+      feedback(heard, s.heardNbOn, true);
+      return null;
+    case 'neighboursOff':
+      st.updateSettings({ neighbourMode: false });
+      feedback(heard, s.heardNbOff, true);
+      return null;
     case 'help':
       feedback(heard, s.voiceHelp, true);
       openVoiceHelp();

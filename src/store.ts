@@ -37,6 +37,14 @@ export interface Settings {
   voiceInput: boolean;
   handsFree: boolean;
   orientation: Orientation;
+  /** Neighbour mode ("Nachbarn"): show the hottest numbers with their wheel neighbours. */
+  neighbourMode: boolean;
+  neighbourLeft: number;
+  neighbourRight: number;
+  /** How many hot numbers to show. */
+  neighbourCount: number;
+  /** The "how it works" guide was shown once. */
+  seenIntro: boolean;
 }
 
 interface State {
@@ -109,6 +117,11 @@ export const useStore = create<State>()(
         voiceInput: false,
         handsFree: false,
         orientation: 'portrait',
+        neighbourMode: false,
+        neighbourLeft: 2,
+        neighbourRight: 2,
+        neighbourCount: 1,
+        seenIntro: false,
       },
       tab: 'play',
       viewSessionId: null,
@@ -214,6 +227,9 @@ export const useStore = create<State>()(
             ...st.settings,
             ...patch,
             defaultPoolSize: clampPoolSize(patch.defaultPoolSize ?? st.settings.defaultPoolSize),
+            neighbourLeft: clampInt(patch.neighbourLeft ?? st.settings.neighbourLeft, 0, 4, 2),
+            neighbourRight: clampInt(patch.neighbourRight ?? st.settings.neighbourRight, 0, 4, 2),
+            neighbourCount: clampInt(patch.neighbourCount ?? st.settings.neighbourCount, 1, 6, 1),
           },
         })),
 
@@ -260,6 +276,10 @@ function sanitize(persisted: unknown, current: State): State {
   };
 }
 
+function clampInt(v: unknown, min: number, max: number, fallback: number): number {
+  return typeof v === 'number' && Number.isInteger(v) ? Math.max(min, Math.min(max, v)) : fallback;
+}
+
 function sanitizeSettings(s: Settings, d: Settings): Settings {
   return {
     ...s,
@@ -269,6 +289,11 @@ function sanitizeSettings(s: Settings, d: Settings): Settings {
     readAloud: !!s.readAloud,
     voiceInput: !!s.voiceInput,
     handsFree: !!s.handsFree,
+    neighbourMode: !!s.neighbourMode,
+    seenIntro: !!s.seenIntro,
+    neighbourLeft: clampInt(s.neighbourLeft, 0, 4, d.neighbourLeft),
+    neighbourRight: clampInt(s.neighbourRight, 0, 4, d.neighbourRight),
+    neighbourCount: clampInt(s.neighbourCount, 1, 6, d.neighbourCount),
   };
 }
 

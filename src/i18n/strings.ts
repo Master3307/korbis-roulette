@@ -167,6 +167,7 @@ const de = {
     ['„lösch die 17"', 'die letzte 17 entfernen'],
     ['„falsch, 17"  ·  „nicht 5 sondern 17"', 'letzte Zahl durch 17 ersetzen'],
     ['„vorlesen"  ·  „vorlesen aus"', 'Vorlesen an / aus'],
+    ['„nachbarn"  ·  „nachbarn aus"', 'Nachbarn-Modus an / aus'],
     ['„stopp"', 'Vorlesen und Zuhören beenden'],
     ['„hilfe"', 'diese Liste zeigen'],
   ] as [string, string][],
@@ -194,6 +195,78 @@ const de = {
   orientLandscape: 'Querformat',
   orientAuto: 'Automatisch',
   orientHint: 'Automatisch folgt der Drehung des Handys.',
+
+
+
+  // about / law of the third
+  aboutButton: 'Wofür ist die App?',
+  aboutWhat: 'Was ist das?',
+  aboutPurposeTitle: 'Wofür ist die App?',
+  aboutPurpose:
+    "Korbi's Roulette Logging hilft dir, beim Roulette die gefallenen Zahlen schnell mitzuschreiben – statt mit Zettel und Stift. Die App führt automatisch deinen Pool der zuletzt gefallenen Zahlen (zum Beispiel 24), zeigt, welche Zahl als Nächstes rausfliegt, und sammelt Statistiken. Sie ist zum Mitschreiben und Lernen gedacht.",
+  lawTitle: 'Das Zwei-Drittel-Gesetz',
+  lawText1:
+    'Bei 37 Würfen fallen im Durchschnitt nur etwa 24 verschiedene Zahlen – also rund zwei Drittel aller Zahlen. Etwa 13 Zahlen (ein Drittel) kommen gar nicht. Dafür kommen andere Zahlen doppelt oder noch öfter.',
+  lawText2: 'Darum ist der Pool am Anfang 24 Zahlen groß: Er enthält ungefähr die Zahlen, die in den letzten Würfen gekommen sind.',
+  lawFormula: 'Rechnung: 37 × (1 − (36/37)³⁷) ≈ 23,6 verschiedene Zahlen',
+  lawWarnTitle: 'Wichtig zu wissen',
+  lawWarn:
+    'Das Gesetz beschreibt nur, wie Zufall im Durchschnitt aussieht. Für den nächsten Wurf hat jede Zahl wieder genau die gleiche Chance: 1 zu 37. Die Kugel hat kein Gedächtnis – der Pool sagt nichts über die nächste Zahl voraus.',
+  lawYours: (d: number, w: number) => `Bei dir gerade: ${d} verschiedene Zahlen in den letzten ${w} Würfen.`,
+  // how-to guide
+  howTitle: "So funktioniert's",
+  howButton: "So funktioniert's",
+  how1Title: 'Gefallene Zahl antippen',
+  how1: 'Nach jedem Wurf tippst du unten die Zahl an, die gefallen ist. Sie kommt in deinem Pool auf Platz 1 (ganz oben links).',
+  how2Title: 'Kommt eine Zahl nochmal?',
+  how2: 'Dann springt sie im Pool zurück auf Platz 1. So bleiben Zahlen, die oft kommen, im Pool.',
+  how3Title: 'Pool voll? Die älteste fliegt raus',
+  how3: 'Kommt dann eine neue Zahl, fliegt die Zahl auf dem letzten Platz raus (rot umrandet). Das ist die, die am längsten nicht mehr kam.',
+  how4Title: 'Vertippt? Kein Problem',
+  how4: 'Einfach „Rückgängig" drücken. Alles wird von selbst gespeichert. Gold umrandete Tasten = die Zahl ist gerade im Pool.',
+  howOk: "Verstanden – los geht's",
+  // neighbours
+  nbMode: 'Nachbarn-Modus',
+  nbModeHint: 'Zeigt die heißesten Zahlen mit ihren Nachbarn auf dem Kessel.',
+  nbTitle: (l: number, r: number) => `🎯 Nachbarn ${l}·${r}`,
+  nbShort: 'Nachbarn',
+  nbLeft: 'Links',
+  nbRight: 'Rechts',
+  nbCount: 'Wie viele heiße Zahlen?',
+  nbPresets: 'Schnellwahl (links·rechts)',
+  nbEmpty: 'Erscheint, sobald Zahlen gefallen sind.',
+  nbExplain: (l: number, r: number) =>
+    `Jede heiße Zahl mit ${l} Nachbar${l === 1 ? '' : 'n'} links und ${r} rechts – so wie sie auf dem Kessel nebeneinander liegen.`,
+  nbStatsTitle: (l: number, r: number) => `Heiße Zahlen mit Nachbarn (${l}·${r})`,
+  nbStatsHits: (hits: number, pct: string, exp: string) => `${hits} Treffer im Bereich · ${pct} (Zufall ≈ ${exp})`,
+  heardNbOn: 'Nachbarn an',
+  heardNbOff: 'Nachbarn aus',
+
+  // responsible gambling
+  rgTitle: 'Verantwortungsvoll spielen',
+  rgButton: 'Hilfe bei Spielsucht',
+  rgIntro:
+    'Glücksspiel kann süchtig machen. Roulette ist reiner Zufall: Keine Strategie, Statistik oder App kann den nächsten Wurf vorhersagen – auf Dauer gewinnt immer die Bank.',
+  rgSignsTitle: 'Warnzeichen',
+  rgSigns: [
+    'Du spielst länger oder mit mehr Geld als geplant.',
+    'Du versuchst, Verluste zurückzugewinnen.',
+    'Du verheimlichst das Spielen oder leihst dir Geld dafür.',
+    'Du bist unruhig oder gereizt, wenn du nicht spielst.',
+  ],
+  rgTipsTitle: 'Das hilft',
+  rgTips: [
+    'Lege vorher ein festes Budget und eine Zeit fest – und hör dann auf.',
+    'Spiele nur mit Geld, dessen Verlust dir nicht wehtut.',
+    'Verluste nie hinterherjagen. Regelmäßig Pausen machen.',
+    'Rede mit jemandem, dem du vertraust.',
+  ],
+  rgHelpTitle: 'Hier gibt es Hilfe – kostenlos und anonym',
+  rgPhoneLabel: 'Infotelefon zur Glücksspielsucht (BIÖG, kostenlos & anonym)',
+  rgWebLabel: 'Selbsttest, Beratung & Hilfe vor Ort',
+  rgSperre: 'Spielersperre (OASIS): Du kannst dich selbst für alle Casinos und Spielhallen in Deutschland sperren lassen – direkt im Casino oder beim Regierungspräsidium Darmstadt (mindestens 3 Monate).',
+  rgGaLabel: 'Anonyme Spieler (Selbsthilfegruppen)',
+  rgShort: 'Glücksspiel kann süchtig machen. Hilfe:',
 };
 
 export type Strings = typeof de;
@@ -359,6 +432,7 @@ const en: Strings = {
     ['"delete 17"', 'remove the latest 17'],
     ['"wrong, 17"  ·  "correction 17"', 'replace the last number with 17'],
     ['"read aloud"  ·  "stop reading"', 'reading on / off'],
+    ['"neighbours"  ·  "neighbours off"', 'neighbour mode on / off'],
     ['"stop"', 'stop reading and listening'],
     ['"help"', 'show this list'],
   ] as [string, string][],
@@ -385,6 +459,74 @@ const en: Strings = {
   orientLandscape: 'Landscape',
   orientAuto: 'Automatic',
   orientHint: 'Automatic follows how you hold the phone.',
+
+
+
+  aboutButton: 'What is this app for?',
+  aboutWhat: 'What is this?',
+  aboutPurposeTitle: 'What is this app for?',
+  aboutPurpose:
+    "Korbi's Roulette Logging helps you note down the numbers at the roulette table quickly – instead of pen and paper. The app keeps your pool of the most recent numbers (for example 24) automatically, shows which number drops out next and collects statistics. It is meant for logging and learning.",
+  lawTitle: 'The law of the third (two-thirds law)',
+  lawText1:
+    'In 37 spins, on average only about 24 different numbers come up – roughly two thirds of all numbers. About 13 numbers (one third) do not come at all. Other numbers come twice or more instead.',
+  lawText2: 'That is why the pool starts with 24 numbers: it holds roughly the numbers that came in the recent spins.',
+  lawFormula: 'Formula: 37 × (1 − (36/37)³⁷) ≈ 23.6 different numbers',
+  lawWarnTitle: 'Important',
+  lawWarn:
+    'The law only describes what chance looks like on average. For the next spin every number has exactly the same chance again: 1 in 37. The ball has no memory – the pool does not predict the next number.',
+  lawYours: (d: number, w: number) => `For you right now: ${d} different numbers in the last ${w} spins.`,
+  howTitle: 'How it works',
+  howButton: 'How it works',
+  how1Title: 'Tap the number that fell',
+  how1: 'After every spin, tap the number that fell. It goes to slot 1 in your pool (top left).',
+  how2Title: 'A number comes again?',
+  how2: 'Then it jumps back to slot 1. That way numbers that come often stay in the pool.',
+  how3Title: 'Pool full? The oldest drops out',
+  how3: 'When a new number comes, the number in the last slot drops out (red border). It is the one that has not come for the longest time.',
+  how4Title: 'Tapped the wrong one? No problem',
+  how4: 'Just press "Undo". Everything is saved automatically. Gold-framed keys = that number is in the pool right now.',
+  howOk: "Got it – let's go",
+  nbMode: 'Neighbour mode',
+  nbModeHint: 'Shows the hottest numbers with their neighbours on the wheel.',
+  nbTitle: (l: number, r: number) => `🎯 Neighbours ${l}·${r}`,
+  nbShort: 'Neighbours',
+  nbLeft: 'Left',
+  nbRight: 'Right',
+  nbCount: 'How many hot numbers?',
+  nbPresets: 'Quick choice (left·right)',
+  nbEmpty: 'Appears as soon as numbers have fallen.',
+  nbExplain: (l: number, r: number) =>
+    `Each hot number with ${l} neighbour${l === 1 ? '' : 's'} on the left and ${r} on the right – as they sit next to each other on the wheel.`,
+  nbStatsTitle: (l: number, r: number) => `Hot numbers with neighbours (${l}·${r})`,
+  nbStatsHits: (hits: number, pct: string, exp: string) => `${hits} hits in this area · ${pct} (chance ≈ ${exp})`,
+  heardNbOn: 'Neighbours on',
+  heardNbOff: 'Neighbours off',
+
+  rgTitle: 'Play responsibly',
+  rgButton: 'Help with gambling problems',
+  rgIntro:
+    'Gambling can be addictive. Roulette is pure chance: no strategy, statistic or app can predict the next spin – in the long run the house always wins.',
+  rgSignsTitle: 'Warning signs',
+  rgSigns: [
+    'You play longer or with more money than planned.',
+    'You try to win back losses.',
+    'You hide your gambling or borrow money for it.',
+    'You feel restless or irritable when you are not playing.',
+  ],
+  rgTipsTitle: 'What helps',
+  rgTips: [
+    'Set a fixed budget and time limit beforehand – and stop when you reach it.',
+    'Only play with money you can afford to lose.',
+    'Never chase losses. Take regular breaks.',
+    'Talk to someone you trust.',
+  ],
+  rgHelpTitle: 'Help is available – free and anonymous',
+  rgPhoneLabel: 'German gambling addiction helpline (BIÖG, free & anonymous)',
+  rgWebLabel: 'Self-test, counselling & local help (German)',
+  rgSperre: 'Self-exclusion (OASIS): in Germany you can ban yourself from all casinos and gaming halls – at any casino or at the Regierungspräsidium Darmstadt (at least 3 months).',
+  rgGaLabel: 'Gamblers Anonymous (self-help groups)',
+  rgShort: 'Gambling can be addictive. Help:',
 };
 
 export const STRINGS: Record<Lang, Strings> = { de, en };

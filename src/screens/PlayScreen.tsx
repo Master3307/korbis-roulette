@@ -9,6 +9,7 @@ import { IconMenu, IconUndo } from '../ui/icons';
 import { NewSession } from './NewSession';
 import { MicButton, ReadToggleButton, VoiceBanner, openVoiceHelpSheet } from '../ui/VoiceUi';
 import { useVoiceUi } from '../voiceControl';
+import { NeighbourStrip, openHowTo, openNeighbourSheet } from '../ui/Extras';
 import { EditSessionSheet } from './SessionsScreen';
 
 const KEYPAD_ROWS = [
@@ -31,6 +32,7 @@ function ActivePlay({ session }: { session: Session }) {
   const addSpin = useStore((s) => s.addSpin);
   const undoSpin = useStore((s) => s.undoSpin);
   const voiceInput = useStore((s) => s.settings.voiceInput);
+  const neighbourMode = useStore((s) => s.settings.neighbourMode);
   const readingIndex = useVoiceUi((s) => s.readingIndex);
 
   const { pool, counts, lastStep } = useMemo(() => {
@@ -50,7 +52,7 @@ function ActivePlay({ session }: { session: Session }) {
   };
 
   return (
-    <div className={`screen play ${session.poolSize > 24 ? 'play-big-pool' : ''}`}>
+    <div className={`screen play ${session.poolSize > 24 ? 'play-big-pool' : ''} ${neighbourMode ? 'play-nb' : ''}`}>
       <header className="play-head">
         <div className="play-head-text">
           <VoiceBanner />
@@ -141,12 +143,16 @@ function ActivePlay({ session }: { session: Session }) {
       </section>
 
       <section className="keypad" aria-label={t.tapNumber}>
-        <div className="keypad-label">
-          <span>{t.tapNumber}</span>
-          <span className="legend-pool">
-            <i className="dot" /> {t.inPoolLegend}
-          </span>
-        </div>
+        {neighbourMode ? (
+          <NeighbourStrip spins={session.spins} />
+        ) : (
+          <div className="keypad-label">
+            <span>{t.tapNumber}</span>
+            <span className="legend-pool">
+              <i className="dot" /> {t.inPoolLegend}
+            </span>
+          </div>
+        )}
         <div className="key-grid">
           <button className={`key key-green key-zero ${inPool.has(0) ? 'key-pool' : ''}`} onClick={() => press(0)}>
             0
@@ -189,7 +195,28 @@ function SessionMenu({ sessionId, close }: { sessionId: string; close: () => voi
       />
       <Toggle checked={settings.readAloud} onChange={(v) => updateSettings({ readAloud: v })} label={t.readAloud} hint={t.readAloudHint} />
       <Toggle checked={settings.voiceInput} onChange={(v) => updateSettings({ voiceInput: v })} label={t.voiceInput} hint={t.voiceInputHint} />
+      <Toggle checked={settings.neighbourMode} onChange={(v) => updateSettings({ neighbourMode: v })} label={`🎯 ${t.nbMode}`} hint={t.nbModeHint} />
       <div className="sheet-buttons">
+        {settings.neighbourMode && (
+          <button
+            className="btn btn-plain btn-lg"
+            onClick={() => {
+              close();
+              openNeighbourSheet();
+            }}
+          >
+            ⚙ {t.nbMode}: {settings.neighbourLeft}·{settings.neighbourRight}
+          </button>
+        )}
+        <button
+          className="btn btn-plain btn-lg"
+          onClick={() => {
+            close();
+            openHowTo();
+          }}
+        >
+          ❔ {t.howButton}
+        </button>
         {settings.voiceInput && (
           <button
             className="btn btn-plain btn-lg"

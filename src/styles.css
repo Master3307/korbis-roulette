@@ -1608,3 +1608,352 @@ b {
     text-overflow: ellipsis;
   }
 }
+
+/* ---------- Neighbour mode ---------- */
+.nb-strip {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 6px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.32);
+  border: 1.5px solid rgba(95, 190, 255, 0.55);
+}
+.nb-head {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.1;
+  min-width: 34px;
+  min-height: 40px;
+  padding: 0 2px;
+  border-right: 1px solid rgba(95, 190, 255, 0.35);
+}
+.nb-title {
+  font-weight: 900;
+  font-size: 0.82em;
+  color: #9fd8ff;
+}
+.nb-edit {
+  font-size: 0.9em;
+  color: #9fd8ff;
+}
+.nb-empty {
+  margin: 0;
+  font-size: 0.75em;
+  color: var(--muted);
+  padding: 2px;
+}
+.nb-groups {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 6px;
+  justify-content: space-around;
+}
+.nb-empty {
+  flex: 1;
+}
+.nb-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+  padding: 2px 3px;
+  border-radius: 999px;
+  background: rgba(95, 190, 255, 0.12);
+  border: 1px solid rgba(95, 190, 255, 0.35);
+}
+.nb-cell {
+  position: relative;
+  display: inline-flex;
+}
+.nb-strip .chip-sm,
+.nb-group .chip-sm {
+  width: 1.75em;
+  height: 1.75em;
+  font-size: 0.82em;
+}
+.nb-center .chip {
+  width: 2.15em;
+  height: 2.15em;
+  font-size: 0.95em;
+  outline: 2.5px solid #9fd8ff;
+  outline-offset: 1px;
+}
+.nb-count {
+  position: absolute;
+  bottom: -5px;
+  right: -6px;
+  font-size: 0.58em;
+  font-weight: 900;
+  background: #9fd8ff;
+  color: #062615;
+  border-radius: 6px;
+  padding: 0 3px;
+  line-height: 1.3;
+}
+.nb-example {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 0;
+}
+.nb-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 6px 0;
+}
+.nb-stat + .nb-stat {
+  border-top: 1px solid var(--felt-line);
+}
+.nb-stat-text {
+  font-size: 0.85rem;
+  color: var(--muted);
+  font-weight: 700;
+}
+.mini-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.mini-stepper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.mini-label {
+  font-weight: 800;
+  font-size: 0.9rem;
+  color: var(--gold-hi);
+  text-align: center;
+}
+.mini-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.mini-row b {
+  min-width: 1.6em;
+  text-align: center;
+  font-family: var(--display);
+  font-size: 1.8rem;
+  color: var(--gold-hi);
+}
+.mini-row button {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  font-size: 1.7rem;
+  font-weight: 700;
+  background: linear-gradient(180deg, #1c6a42, #0b3d24);
+  border: 2px solid var(--gold);
+  color: var(--gold-hi);
+}
+
+/* ---------- Responsible gambling ---------- */
+.rg-intro {
+  margin: 0;
+  font-size: 1.02rem;
+  font-weight: 700;
+}
+.rg-box {
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+.rg-list {
+  margin: 6px 0 0;
+  padding-left: 1.2em;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.95rem;
+}
+.rg-link {
+  flex-direction: column;
+  text-decoration: none;
+  gap: 2px;
+  font-size: 1.2rem;
+}
+.rg-link small {
+  font-size: 0.72rem;
+  font-weight: 700;
+  opacity: 0.85;
+}
+.rg-note {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  text-align: left;
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-size: 0.82rem;
+  color: var(--muted);
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--felt-line);
+}
+.rg-note b {
+  color: var(--ivory);
+  white-space: nowrap;
+}
+.rg-note-more {
+  font-size: 1.4rem;
+  color: var(--gold-hi);
+}
+
+/* ---------- How-to guide ---------- */
+.howto {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.howto li {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 14px;
+  padding: 10px 12px;
+}
+.howto b {
+  font-size: 1.05rem;
+  color: var(--gold-hi);
+}
+.howto p {
+  margin: 4px 0 0;
+  font-size: 0.98rem;
+}
+.howto-num {
+  flex: none;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-weight: 900;
+  background: var(--gold);
+  color: #2a1d03;
+}
+.howto-demo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+.demo-key {
+  display: inline-grid;
+  place-items: center;
+  width: 54px;
+  height: 46px;
+}
+.demo-slot {
+  width: 54px;
+  height: 48px;
+  padding-top: 0;
+  animation: none;
+}
+.demo-arrow {
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: var(--gold-hi);
+}
+.howto-btn {
+  min-height: 50px;
+}
+
+/* Neighbour strip needs a bit of room on short phones. */
+@media (max-height: 760px) {
+  .play-nb {
+    --key-min: 26px;
+  }
+  .play-nb .pool-hint {
+    display: none;
+  }
+}
+@media (max-height: 700px) {
+  .play-nb {
+    --slot-min: 32px;
+    --key-min: 25px;
+  }
+}
+@media (max-width: 340px) {
+  .nb-strip .chip-sm,
+  .nb-group .chip-sm {
+    width: 1.55em;
+    height: 1.55em;
+    font-size: 0.75em;
+  }
+}
+
+/* ---------- About / law of the third ---------- */
+.about-text {
+  margin: 4px 0 0;
+  font-size: 1rem;
+  line-height: 1.45;
+}
+.law-box {
+  border: 1.5px solid rgba(241, 215, 122, 0.4);
+}
+.law-pic {
+  display: grid;
+  grid-template-columns: repeat(13, 1fr);
+  gap: 5px;
+  margin: 10px 0 4px;
+}
+.law-pic i {
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.law-pic i.came {
+  background: var(--gold);
+  border-color: var(--gold-hi);
+}
+.law-yours {
+  margin: 8px 0 0;
+  font-weight: 900;
+  color: var(--gold-hi);
+}
+.intro-btns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.intro-btns .btn {
+  font-size: 0.92rem;
+  padding: 8px 10px;
+  text-align: center;
+}
+.info-btn {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--gold-hi);
+  padding: 6px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(241, 215, 122, 0.4);
+  min-height: 36px;
+}
+.nb-strip .nb-groups:has(.nb-group:only-child) .chip-sm {
+  width: 2.1em;
+  height: 2.1em;
+  font-size: 0.95em;
+}
+.nb-strip .nb-groups:has(.nb-group:only-child) .nb-center .chip {
+  width: 2.5em;
+  height: 2.5em;
+  font-size: 1.05em;
+}

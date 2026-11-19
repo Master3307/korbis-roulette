@@ -23,6 +23,8 @@ export type VoiceCommand =
   | { kind: 'readOff' }
   | { kind: 'stop' }
   | { kind: 'help' }
+  | { kind: 'neighboursOn' }
+  | { kind: 'neighboursOff' }
   | { kind: 'unknown'; tooBig?: number };
 
 export function normalize(text: string): string {
@@ -111,6 +113,7 @@ const READ = ['vorlesen', 'vorles', 'lies', 'lesen', 'ansag', 'read', 'speak', '
 const OFF = ['aus', 'off', 'stopp', 'stop', 'halt', 'ruhe', 'leise', 'quiet', 'silence', 'schluss', 'beenden', 'end'];
 const STOP = ['stopp', 'stop', 'halt', 'ruhe', 'leise', 'quiet', 'silence', 'schluss', 'aufhoeren', 'aufhoren'];
 const HELP = ['hilfe', 'help', 'helfen'];
+const NEIGHBOURS = ['nachbar', 'neighbo', 'neighbour', 'neighbor'];
 
 const has = (tokens: string[], list: string[]) => tokens.some((t) => list.some((w) => t === w || (w.length >= 4 && t.startsWith(w))));
 
@@ -167,6 +170,7 @@ export function parseVoice(text: string): VoiceCommand {
 
   if (has(tokens, HELP)) return { kind: 'help' };
   if (isRead) return isOff ? { kind: 'readOff' } : { kind: 'readOn' };
+  if (has(tokens, NEIGHBOURS)) return isOff ? { kind: 'neighboursOff' } : { kind: 'neighboursOn' };
   if (has(tokens, CORRECT) && numbers.length) return { kind: 'replace', n: numbers[numbers.length - 1] };
   if (has(tokens, DELETE) && numbers.length) return { kind: 'delete', n: numbers[numbers.length - 1] };
   if (has(tokens, UNDO) || has(tokens, DELETE) || has(tokens, CORRECT)) return { kind: 'undo' };
