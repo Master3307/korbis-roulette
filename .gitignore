@@ -10,3 +10,6 @@ coverage/
 *.keystore
 keystore.properties
 android/keystore.properties
+
+# Android bug reports / local dumps
+bugreport-*.zip
