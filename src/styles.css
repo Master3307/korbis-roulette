@@ -683,7 +683,8 @@ b {
 .pool-grid {
   flex: 1;
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-columns: repeat(var(--pool-cols, 6), minmax(0, 1fr));
+  grid-auto-rows: minmax(var(--slot-min), 1fr);
   gap: 5px;
 }
 .slot {
@@ -1977,4 +1978,82 @@ b {
 }
 .nb-center.nb-in-pool .chip {
   outline-color: #9fd8ff;
+}
+
+/* ---------- Keypad "like the table": 3 rows, 0 on the left ---------- */
+.key-grid.kp-table {
+  grid-template-columns: 0.9fr repeat(12, minmax(0, 1fr));
+  grid-template-rows: repeat(3, minmax(var(--tkey-min, 44px), 1fr));
+  height: min(196px, 27vh);
+  gap: 2px;
+  padding: 3px;
+  /* Use the screen's side padding too: every pixel of width counts for 13 columns. */
+  margin: 0 -7px;
+  border-radius: 12px;
+  background: radial-gradient(ellipse at center, #135a35, #0a3a21);
+  border: 2px solid var(--gold-lo);
+  box-shadow: inset 0 0 14px rgba(0, 0, 0, 0.45);
+}
+.kp-table .key {
+  padding: 0;
+  border-radius: 5px;
+  font-size: 1.02em;
+  letter-spacing: -0.04em;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.55);
+}
+.kp-table .key-zero {
+  grid-row: 1 / span 3;
+  font-size: 1.4em;
+  border-radius: 40% 6px 6px 40% / 50% 6px 6px 50%;
+}
+.kp-table .key-pool {
+  border: 1px solid var(--gold-hi);
+  box-shadow: inset 0 0 0 1.5px var(--gold-hi), 0 2px 0 rgba(0, 0, 0, 0.55);
+}
+.kp-table .key-pool::after {
+  top: 2px;
+  right: 50%;
+  transform: translateX(50%);
+  width: 5px;
+  height: 5px;
+}
+@media (max-height: 700px) {
+  .key-grid.kp-table {
+    --tkey-min: 38px;
+    height: min(170px, 27vh);
+  }
+}
+@media (max-width: 340px) {
+  .kp-table .key {
+    font-size: 0.95em;
+  }
+}
+@media (orientation: landscape) and (min-aspect-ratio: 13/10) {
+  /* Table keypad uses the full width under the pool – wide keys like the real table. */
+  .play.kp-mode-table {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: auto auto minmax(0, 1fr) auto;
+    grid-template-areas:
+      'head result'
+      'badge badge'
+      'pool pool'
+      'keys keys';
+    --pool-cols: 12;
+    --slot-min: 24px;
+  }
+  .play.kp-mode-table .practice-badge {
+    grid-area: badge;
+  }
+  .play.kp-mode-table .pool {
+    padding: 4px 6px 6px;
+  }
+  .play.kp-mode-table .key-grid.kp-table {
+    margin: 0;
+    height: min(150px, 40vh);
+    --tkey-min: 34px;
+  }
+  .play.kp-mode-table .kp-table .key {
+    font-size: 1.2em;
+  }
 }

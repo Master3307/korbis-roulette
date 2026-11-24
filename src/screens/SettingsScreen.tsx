@@ -1,5 +1,5 @@
 import { MAX_POOL, MIN_POOL } from '../logic/pool';
-import { READ_RATES, useStore, useT, type Orientation, type TextScale } from '../store';
+import { READ_RATES, useStore, useT, type KeypadLayout, type Orientation, type TextScale } from '../store';
 import { speak, stopSpeaking } from '../speech';
 import { openVoiceHelpSheet } from '../ui/VoiceUi';
 import { GamblingNote, NeighbourSettings, openAbout, openGamblingHelp, openHowTo } from '../ui/Extras';
@@ -47,6 +47,18 @@ export function SettingsScreen() {
             { value: 1.3, label: <span style={{ fontSize: '1.2em' }}>{t.textXL}</span> },
           ]}
         />
+      </Card>
+
+      <Card title={t.keypadLayout}>
+        <Segmented<KeypadLayout>
+          value={settings.keypadLayout}
+          onChange={(keypadLayout) => update({ keypadLayout })}
+          options={[
+            { value: 'table', label: t.keypadTable },
+            { value: 'grid', label: t.keypadGrid },
+          ]}
+        />
+        <p className="hint">{t.keypadHint}</p>
       </Card>
 
       <Card>

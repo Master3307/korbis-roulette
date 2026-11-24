@@ -195,6 +195,10 @@ const de = {
   orientLandscape: 'Querformat',
   orientAuto: 'Automatisch',
   orientHint: 'Automatisch folgt der Drehung des Handys.',
+  keypadLayout: 'Zahlenfeld',
+  keypadTable: '🎰 Wie am Tisch',
+  keypadGrid: 'Große Tasten',
+  keypadHint: '„Wie am Tisch“: 3 Reihen, genau wie auf dem Roulettetisch (0 links, oben 3 6 9 …). „Große Tasten“: 6 Zahlen pro Reihe, extra groß.',
 
 
 
@@ -459,6 +463,10 @@ const en: Strings = {
   orientLandscape: 'Landscape',
   orientAuto: 'Automatic',
   orientHint: 'Automatic follows how you hold the phone.',
+  keypadLayout: 'Number keys',
+  keypadTable: '🎰 Like the table',
+  keypadGrid: 'Big buttons',
+  keypadHint: '"Like the table": 3 rows, exactly as on the roulette table (0 on the left, top row 3 6 9 …). "Big buttons": 6 numbers per row, extra large.',
 
 
 

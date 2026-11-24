@@ -22,6 +22,9 @@ export type Tab = 'play' | 'stats' | 'sessions' | 'settings';
 
 export type Orientation = 'portrait' | 'landscape' | 'auto';
 
+/** 'table' = 3 rows like the real roulette table, 'grid' = big buttons, 6 per row. */
+export type KeypadLayout = 'table' | 'grid';
+
 /** Reading speeds, slowest first. Index is stored. */
 export const READ_RATES = [0.5, 0.7, 0.9, 1.1, 1.35] as const;
 
@@ -37,6 +40,7 @@ export interface Settings {
   voiceInput: boolean;
   handsFree: boolean;
   orientation: Orientation;
+  keypadLayout: KeypadLayout;
   /** Neighbour mode ("Nachbarn"): show the hottest numbers with their wheel neighbours. */
   neighbourMode: boolean;
   neighbourLeft: number;
@@ -117,6 +121,7 @@ export const useStore = create<State>()(
         voiceInput: false,
         handsFree: false,
         orientation: 'portrait',
+        keypadLayout: 'table',
         neighbourMode: false,
         neighbourLeft: 2,
         neighbourRight: 2,
@@ -286,6 +291,7 @@ function sanitizeSettings(s: Settings, d: Settings): Settings {
     lang: s.lang === 'en' ? 'en' : s.lang === 'de' ? 'de' : d.lang,
     readSpeed: Number.isInteger(s.readSpeed) && s.readSpeed >= 0 && s.readSpeed < READ_RATES.length ? s.readSpeed : d.readSpeed,
     orientation: ['portrait', 'landscape', 'auto'].includes(s.orientation) ? s.orientation : 'portrait',
+    keypadLayout: s.keypadLayout === 'grid' ? 'grid' : 'table',
     readAloud: !!s.readAloud,
     voiceInput: !!s.voiceInput,
     handsFree: !!s.handsFree,

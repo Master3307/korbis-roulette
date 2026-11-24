@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.4.0 – 2026-11-24
+
+- **Number keys "like the table" (new default)**: the keypad now looks like a real roulette
+  table – 0 on the left over three rows, then 3 6 9 … 36 on top, 2 5 … 35 in the middle and
+  1 4 … 34 at the bottom. The old big buttons (6 per row) are still there:
+  Settings → "Number keys" or the session menu.
+- In landscape the table keypad uses the full width under the pool, so the keys are wide.
+  The pool switches to 12 per row there.
+- Removed a 7 MB bug-report file that had been committed to the repository by mistake.
+
 ## 1.3.0 – 2026-11-19
 
 - **Bigger, clearer app icon**: the roulette wheel now fills the whole icon with a large

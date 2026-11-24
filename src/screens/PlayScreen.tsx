@@ -1,9 +1,10 @@
 import { useMemo } from 'react';
 import { analyzeSpins, MAX_POOL, MIN_POOL } from '../logic/pool';
 import { colorOf } from '../logic/roulette';
-import { useActiveSession, useStore, useT, type Session } from '../store';
+import { useActiveSession, useStore, useT, type KeypadLayout, type Session } from '../store';
 import { tapFeedback } from '../native';
-import { Chip, Stepper, Toggle } from '../ui/components';
+import { Chip, Segmented, Stepper, Toggle } from '../ui/components';
+import { Keypad } from '../ui/Keypad';
 import { confirmDialog, openDialog, Sheet } from '../ui/dialog';
 import { IconMenu, IconUndo } from '../ui/icons';
 import { NewSession } from './NewSession';
@@ -11,15 +12,6 @@ import { MicButton, ReadToggleButton, VoiceBanner, openVoiceHelpSheet } from '..
 import { useVoiceUi } from '../voiceControl';
 import { NeighbourStrip, openHowTo, openNeighbourSheet } from '../ui/Extras';
 import { EditSessionSheet } from './SessionsScreen';
-
-const KEYPAD_ROWS = [
-  [1, 2, 3, 4, 5, 6],
-  [7, 8, 9, 10, 11, 12],
-  [13, 14, 15, 16, 17, 18],
-  [19, 20, 21, 22, 23, 24],
-  [25, 26, 27, 28, 29, 30],
-  [31, 32, 33, 34, 35, 36],
-];
 
 export function PlayScreen() {
   const session = useActiveSession();
@@ -33,6 +25,7 @@ function ActivePlay({ session }: { session: Session }) {
   const undoSpin = useStore((s) => s.undoSpin);
   const voiceInput = useStore((s) => s.settings.voiceInput);
   const neighbourMode = useStore((s) => s.settings.neighbourMode);
+  const keypadLayout = useStore((s) => s.settings.keypadLayout);
   const readingIndex = useVoiceUi((s) => s.readingIndex);
 
   const { pool, counts, lastStep } = useMemo(() => {
@@ -52,7 +45,7 @@ function ActivePlay({ session }: { session: Session }) {
   };
 
   return (
-    <div className={`screen play ${session.poolSize > 24 ? 'play-big-pool' : ''} ${neighbourMode ? 'play-nb' : ''}`}>
+    <div className={`screen play kp-mode-${keypadLayout} ${session.poolSize > 24 ? 'play-big-pool' : ''} ${neighbourMode ? 'play-nb' : ''}`}>
       <header className="play-head">
         <div className="play-head-text">
           <VoiceBanner />
@@ -113,7 +106,7 @@ function ActivePlay({ session }: { session: Session }) {
           <span className="pool-title">{t.poolTitle(session.poolSize)}</span>
           <span className="pool-hint">{t.poolHint}</span>
         </div>
-        <div className="pool-grid" style={{ gridTemplateRows: `repeat(${Math.ceil(session.poolSize / 6)}, minmax(var(--slot-min), 1fr))` }}>
+        <div className="pool-grid">
           {Array.from({ length: session.poolSize }, (_, i) => {
             const n = pool[i];
             const isNextOut = full && i === session.poolSize - 1;
@@ -153,16 +146,7 @@ function ActivePlay({ session }: { session: Session }) {
             </span>
           </div>
         )}
-        <div className="key-grid">
-          <button className={`key key-green key-zero ${inPool.has(0) ? 'key-pool' : ''}`} onClick={() => press(0)}>
-            0
-          </button>
-          {KEYPAD_ROWS.flat().map((n) => (
-            <button key={n} className={`key key-${colorOf(n)} ${inPool.has(n) ? 'key-pool' : ''}`} onClick={() => press(n)}>
-              {n}
-            </button>
-          ))}
-        </div>
+        <Keypad layout={keypadLayout} inPool={inPool} onPress={press} />
       </section>
     </div>
   );
@@ -195,6 +179,17 @@ function SessionMenu({ sessionId, close }: { sessionId: string; close: () => voi
       />
       <Toggle checked={settings.readAloud} onChange={(v) => updateSettings({ readAloud: v })} label={t.readAloud} hint={t.readAloudHint} />
       <Toggle checked={settings.voiceInput} onChange={(v) => updateSettings({ voiceInput: v })} label={t.voiceInput} hint={t.voiceInputHint} />
+      <div className="sheet-section">
+        <div className="field-label">{t.keypadLayout}</div>
+        <Segmented<KeypadLayout>
+          value={settings.keypadLayout}
+          onChange={(keypadLayout) => updateSettings({ keypadLayout })}
+          options={[
+            { value: 'table', label: t.keypadTable },
+            { value: 'grid', label: t.keypadGrid },
+          ]}
+        />
+      </div>
       <Toggle checked={settings.neighbourMode} onChange={(v) => updateSettings({ neighbourMode: v })} label={`🎯 ${t.nbMode}`} hint={t.nbModeHint} />
       <div className="sheet-buttons">
         {settings.neighbourMode && (
