@@ -41,6 +41,8 @@ export interface Settings {
   handsFree: boolean;
   orientation: Orientation;
   keypadLayout: KeypadLayout;
+  /** Show the pool sorted 0-36 instead of newest first. */
+  poolSort: boolean;
   /** Neighbour mode ("Nachbarn"): show the hottest numbers with their wheel neighbours. */
   neighbourMode: boolean;
   neighbourLeft: number;
@@ -122,6 +124,7 @@ export const useStore = create<State>()(
         handsFree: false,
         orientation: 'portrait',
         keypadLayout: 'table',
+        poolSort: false,
         neighbourMode: false,
         neighbourLeft: 2,
         neighbourRight: 2,
@@ -293,6 +296,7 @@ function sanitizeSettings(s: Settings, d: Settings): Settings {
     orientation: ['portrait', 'landscape', 'auto'].includes(s.orientation) ? s.orientation : 'portrait',
     keypadLayout: s.keypadLayout === 'grid' ? 'grid' : 'table',
     readAloud: !!s.readAloud,
+    poolSort: !!s.poolSort,
     voiceInput: !!s.voiceInput,
     handsFree: !!s.handsFree,
     neighbourMode: !!s.neighbourMode,

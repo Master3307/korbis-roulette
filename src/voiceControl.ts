@@ -6,7 +6,7 @@
  * pauses and restarts from the top afterwards.
  */
 import { create } from 'zustand';
-import { analyzeSpins } from './logic/pool';
+import { analyzeSpins, displayPool } from './logic/pool';
 import { parseAlternatives, type VoiceCommand } from './logic/voice';
 import { ensureMicPermission, listenOnce, recognitionAvailable, speak, stopListening, stopSpeaking } from './speech';
 import { READ_RATES, useStore } from './store';
@@ -38,7 +38,8 @@ function activePool(): number[] {
   const st = useStore.getState();
   const s = st.sessions.find((x) => x.id === st.activeId);
   if (!s) return [];
-  return analyzeSpins(s.spins).recency.slice(0, s.poolSize);
+  // Same order as on screen, so the highlighted slot matches what is read.
+  return displayPool(analyzeSpins(s.spins).recency.slice(0, s.poolSize), st.settings.poolSort).map((x) => x.n);
 }
 
 // ---------------------------------------------------------------- reading
@@ -211,6 +212,14 @@ export function applyCommand(cmd: VoiceCommand, heard: string): string | null {
     case 'stop':
       st.updateSettings({ readAloud: false });
       feedback(heard, s.heardStop, true);
+      return null;
+    case 'sortOn':
+      st.updateSettings({ poolSort: true });
+      feedback(heard, s.heardSortOn, true);
+      return null;
+    case 'sortOff':
+      st.updateSettings({ poolSort: false });
+      feedback(heard, s.heardSortOff, true);
       return null;
     case 'neighboursOn':
       st.updateSettings({ neighbourMode: true });

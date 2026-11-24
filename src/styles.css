@@ -2050,10 +2050,51 @@ b {
   }
   .play.kp-mode-table .key-grid.kp-table {
     margin: 0;
-    height: min(150px, 40vh);
-    --tkey-min: 34px;
+    height: min(144px, 37vh);
+    --tkey-min: 32px;
   }
   .play.kp-mode-table .kp-table .key {
     font-size: 1.2em;
+  }
+}
+
+/* ---------- Pool sort switch (Neueste | 0–36) ---------- */
+.sort-pill {
+  display: inline-flex;
+  margin-left: auto;
+  border-radius: 999px;
+  border: 1.5px solid var(--gold-lo);
+  background: rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+}
+.sort-pill button {
+  min-height: 30px;
+  padding: 0 11px;
+  font-size: 0.72em;
+  font-weight: 800;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.sort-pill button.sort-on {
+  background: linear-gradient(180deg, var(--gold-hi), var(--gold));
+  color: #1b1405;
+}
+.pool-head .pool-hint {
+  flex-basis: 100%;
+}
+@media (orientation: landscape) and (min-aspect-ratio: 13/10) {
+  .pool-head .pool-hint {
+    flex-basis: auto;
+    order: 1;
+  }
+  .pool-head .sort-pill {
+    order: 2;
+    margin-left: 0;
+  }
+  .pool-head {
+    align-items: center;
+  }
+  .sort-pill button {
+    min-height: 24px;
   }
 }

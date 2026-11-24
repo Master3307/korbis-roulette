@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.5.0 – 2026-11-24
+
+- **Sort the pool 0–36**: new switch "Newest | 0–36" right on the pool. "0–36" shows your
+  numbers in order, so you find a number at a glance and can place bets one after another
+  on the table. Switch back any time – nothing about the pool changes, only the view.
+  - The small number in each box still shows the slot (1 = newest), the newest number keeps
+    its gold frame and the one that drops out next keeps its red frame.
+  - Read aloud follows the order on screen.
+  - Voice: "sortieren" / "sort" and "sortieren aus" / "unsortiert" / "sort off".
+
 ## 1.4.0 – 2026-11-24
 
 - **Number keys "like the table" (new default)**: the keypad now looks like a real roulette

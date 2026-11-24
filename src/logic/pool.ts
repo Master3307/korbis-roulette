@@ -68,6 +68,22 @@ export function currentPool(spins: readonly Spin[], size: number): number[] {
   return analyzeSpins(spins).recency.slice(0, clampPoolSize(size));
 }
 
+export interface PoolSlot {
+  n: number;
+  /** Position in the pool by time, 0 = newest. */
+  rank: number;
+}
+
+/**
+ * Pool in display order. `sorted` = ascending 0-36 (handy for finding a
+ * number or placing bets), otherwise newest first. Each entry keeps its
+ * time rank so "newest" and "drops out next" can still be shown.
+ */
+export function displayPool(pool: readonly number[], sorted: boolean): PoolSlot[] {
+  const slots = pool.map((n, rank) => ({ n, rank }));
+  return sorted ? slots.sort((a, b) => a.n - b.n) : slots;
+}
+
 export const MIN_POOL = 1;
 export const MAX_POOL = 36;
 export const DEFAULT_POOL = 24;

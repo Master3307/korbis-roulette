@@ -42,6 +42,8 @@ describe('voice: commands', () => {
     ['hilfe', 'help'], ['help', 'help'], ['was kann ich sagen hilfe', 'help'],
     ['nachbarn', 'neighboursOn'], ['Nachbarn an', 'neighboursOn'], ['nachbarn aus', 'neighboursOff'],
     ['show neighbours', 'neighboursOn'], ['neighbors off', 'neighboursOff'],
+    ['sortieren', 'sortOn'], ['sortiert', 'sortOn'], ['sort', 'sortOn'], ['sortieren aus', 'sortOff'],
+    ['unsortiert', 'sortOff'], ['neueste zuerst', 'sortOff'], ['sort off', 'sortOff'],
     ['blabla', 'unknown'], ['', 'unknown'],
   ])('%s -> %s', (t, k) => expect(parseVoice(t).kind).toBe(k));
 

@@ -1,4 +1,4 @@
-import { analyzeSpins, clampPoolSize, currentPool, type Spin } from './pool';
+import { analyzeSpins, clampPoolSize, currentPool, displayPool, type Spin } from './pool';
 
 const spins = (nums: number[], size = 24): Spin[] => nums.map((n, i) => ({ n, t: i, size }));
 
@@ -102,5 +102,28 @@ describe('matches a literal step-by-step implementation of the rules', () => {
       nums.push(Math.floor(rnd() * 37));
       expect(currentPool(spins(nums, size), size)).toEqual(literal(nums, size));
     }
+  });
+});
+
+describe('displayPool', () => {
+  it('keeps time order by default', () => {
+    expect(displayPool([17, 5, 32], false)).toEqual([
+      { n: 17, rank: 0 },
+      { n: 5, rank: 1 },
+      { n: 32, rank: 2 },
+    ]);
+  });
+  it('sorts 0-36 and keeps each number\'s time rank', () => {
+    expect(displayPool([17, 0, 32, 5], true)).toEqual([
+      { n: 0, rank: 1 },
+      { n: 5, rank: 3 },
+      { n: 17, rank: 0 },
+      { n: 32, rank: 2 },
+    ]);
+  });
+  it('does not change the input', () => {
+    const pool = [3, 1, 2];
+    displayPool(pool, true);
+    expect(pool).toEqual([3, 1, 2]);
   });
 });

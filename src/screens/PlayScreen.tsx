@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { analyzeSpins, MAX_POOL, MIN_POOL } from '../logic/pool';
+import { analyzeSpins, displayPool, MAX_POOL, MIN_POOL } from '../logic/pool';
 import { colorOf } from '../logic/roulette';
 import { useActiveSession, useStore, useT, type KeypadLayout, type Session } from '../store';
 import { tapFeedback } from '../native';
@@ -26,6 +26,8 @@ function ActivePlay({ session }: { session: Session }) {
   const voiceInput = useStore((s) => s.settings.voiceInput);
   const neighbourMode = useStore((s) => s.settings.neighbourMode);
   const keypadLayout = useStore((s) => s.settings.keypadLayout);
+  const poolSort = useStore((s) => s.settings.poolSort);
+  const updateSettings = useStore((s) => s.updateSettings);
   const readingIndex = useVoiceUi((s) => s.readingIndex);
 
   const { pool, counts, lastStep } = useMemo(() => {
@@ -36,6 +38,7 @@ function ActivePlay({ session }: { session: Session }) {
   }, [session.spins, session.poolSize]);
 
   const inPool = new Set(pool);
+  const shown = displayPool(pool, poolSort);
   const full = pool.length >= session.poolSize;
 
   const press = (n: number) => {
@@ -104,23 +107,40 @@ function ActivePlay({ session }: { session: Session }) {
       <section className="pool" aria-label={t.pool}>
         <div className="pool-head">
           <span className="pool-title">{t.poolTitle(session.poolSize)}</span>
-          <span className="pool-hint">{t.poolHint}</span>
+          <div className="sort-pill" role="group" aria-label={t.sortLabel}>
+            {([false, true] as const).map((v) => (
+              <button
+                key={String(v)}
+                className={poolSort === v ? 'sort-on' : ''}
+                aria-pressed={poolSort === v}
+                onClick={() => {
+                  tapFeedback();
+                  updateSettings({ poolSort: v });
+                }}
+              >
+                {v ? t.sortAsc : t.sortNewest}
+              </button>
+            ))}
+          </div>
+          <span className="pool-hint">{poolSort ? t.poolHintSorted : t.poolHint}</span>
         </div>
         <div className="pool-grid">
           {Array.from({ length: session.poolSize }, (_, i) => {
-            const n = pool[i];
-            const isNextOut = full && i === session.poolSize - 1;
+            const slot = shown[i];
+            const n = slot?.n;
+            const rank = slot ? slot.rank : i;
+            const isNextOut = full && rank === session.poolSize - 1;
             return (
               <div
-                key={i}
-                className={`slot ${n === undefined ? 'slot-empty' : `slot-${colorOf(n)}`} ${isNextOut ? 'slot-out' : ''} ${i === 0 && n !== undefined ? 'slot-top' : ''} ${readingIndex === i ? 'slot-reading' : ''}`}
+                key={poolSort && n !== undefined ? `n${n}` : i}
+                className={`slot ${n === undefined ? 'slot-empty' : `slot-${colorOf(n)}`} ${isNextOut ? 'slot-out' : ''} ${rank === 0 && n !== undefined ? 'slot-top' : ''} ${readingIndex === i ? 'slot-reading' : ''}`}
               >
-                <span className="slot-pos">{i + 1}</span>
+                <span className="slot-pos">{rank + 1}</span>
                 {n === undefined ? (
                   <span className="slot-free">{t.empty}</span>
                 ) : (
                   <>
-                    <span className="slot-num" key={i === 0 ? `${n}-${session.spins.length}` : n}>
+                    <span className="slot-num" key={rank === 0 ? `${n}-${session.spins.length}` : n}>
                       {n}
                     </span>
                     <span className="slot-count">
