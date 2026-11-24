@@ -116,7 +116,7 @@ export function SettingsScreen() {
         )}
       </Card>
 
-      <Card title={`🎯 ${t.nbMode}`}>
+      <Card title={`🎯 ${t.nbShort}`}>
         <NeighbourSettings />
       </Card>
 

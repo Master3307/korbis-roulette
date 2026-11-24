@@ -16,6 +16,7 @@ import { Card, Chip, Segmented, ShareBar, StatTile } from '../ui/components';
 import { confirmDialog } from '../ui/dialog';
 import { Wheel } from '../ui/Wheel';
 import { wheelNeighbours } from '../logic/roulette';
+import { NB_SIDE } from '../logic/neighbours';
 import { groupHits, hotNumbers } from '../logic/stats';
 import { openAbout } from '../ui/Extras';
 import type { Strings } from '../i18n/strings';
@@ -342,8 +343,8 @@ function History({ spins, t, onDelete }: { spins: Spin[]; t: Strings; onDelete: 
 
 function NeighbourStats({ hot, counts, total, t, pool }: { hot: number[]; counts: number[]; total: number; t: Strings; pool?: number[] }) {
   const inPool = new Set(pool ?? []);
-  const l = useStore((s) => s.settings.neighbourLeft);
-  const r = useStore((s) => s.settings.neighbourRight);
+  const l = NB_SIDE;
+  const r = NB_SIDE;
   if (!hot.length) return null;
   return (
     <Card title={`🎯 ${t.nbStatsTitle(l, r)}`} right={pool ? <span className="hint"><i className="dot" /> {t.inPoolLegend}</span> : undefined}>

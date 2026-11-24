@@ -1,5 +1,23 @@
 # Changelog
 
+## 1.6.0 – 2026-11-24
+
+- **Smart neighbours ("17 mit Nachbarn")**: the app now spots when 5 numbers of your pool sit
+  side by side on the wheel and shows the call you can simply announce at the table –
+  e.g. "17 mit Nachbarn" instead of 2, 25, 17, 34 and 6 one by one.
+  - Always the casino standard 2·2 (two left, two right). The old left/right/count settings
+    are gone.
+  - Strip above the keypad: the numbers to announce, plus how many are left as single numbers.
+    Tap it for the full list: every call with its 5 numbers, the singles, and the total
+    number of chips.
+  - Each call has its own colour – a coloured bar under the pool boxes it covers, and a ★ on
+    the number you announce.
+  - Calls never overlap and never include a number that is not in your pool.
+  - Switched on for everyone once with this update; turn it off under Settings → Neighbours,
+    in the session menu or by voice ("Nachbarn aus").
+- Guide ("So funktioniert's") has a new step explaining sorting and neighbours, and mentions
+  that the keys are laid out like the table.
+
 ## 1.5.0 – 2026-11-24
 
 - **Sort the pool 0–36**: new switch "Newest | 0–36" right on the pool. "0–36" shows your

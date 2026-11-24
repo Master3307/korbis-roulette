@@ -1,109 +1,73 @@
 import { useMemo } from 'react';
 import { wheelNeighbours } from '../logic/roulette';
-import { hotNumbers, lawOfThird } from '../logic/stats';
-import type { Spin } from '../logic/pool';
+import { lawOfThird } from '../logic/stats';
+import { analyzeSpins } from '../logic/pool';
+import { NB_SIDE, neighbourPlan } from '../logic/neighbours';
 import { useStore, useT } from '../store';
 import { Chip, Toggle } from './components';
 import { openDialog, Sheet } from './dialog';
-import { tapFeedback } from '../native';
 
 // ------------------------------------------------------------ neighbours
 
-/** Strip on the play screen: hottest numbers with their wheel neighbours. */
-export function NeighbourStrip({ spins, pool }: { spins: Spin[]; pool: number[] }) {
+/** One colour per neighbour call – same colour on the pool boxes and in the strip. */
+export const NB_COLORS = ['#f1d77a', '#5fd3e8', '#c49bff', '#ff9f5a', '#7ee08f', '#ff7eb6', '#9fb4ff'];
+export const nbColor = (i: number) => NB_COLORS[i % NB_COLORS.length];
+
+/**
+ * Strip on the play screen: which pool numbers can be announced as
+ * "X mit Nachbarn" (X with 2 neighbours on each side), plus what is left
+ * to play as single numbers. Tap to see the full announcement.
+ */
+export function NeighbourStrip({ pool }: { pool: number[] }) {
   const t = useT();
-  const { neighbourLeft: l, neighbourRight: r, neighbourCount: k } = useStore((s) => s.settings);
-  const counts = useMemo(() => {
-    const c = Array(37).fill(0) as number[];
-    spins.forEach((s) => c[s.n]++);
-    return c;
-  }, [spins]);
-  const hot = useMemo(() => hotNumbers(spins, k), [spins, k]);
-  const inPool = new Set(pool);
-
+  const plan = useMemo(() => neighbourPlan(pool), [pool]);
   return (
-    <div className="nb-strip" aria-label={t.nbShort}>
-      <button className="nb-head" onClick={openNeighbourSheet} aria-label={t.nbMode}>
-        <span className="nb-title">🎯</span>
-        <span className="nb-title">
-          {l}·{r}
-        </span>
-        <span className="nb-edit">⚙</span>
-      </button>
-      {!hot.length ? (
-        <p className="nb-empty">{t.nbEmpty}</p>
+    <button className="nb-strip" onClick={() => openNeighbourSheet(pool)} aria-label={t.nbSheetTitle}>
+      <span className="nb-head">
+        <span className="nb-title">🎯 {t.nbShort}</span>
+      </span>
+      {!pool.length ? (
+        <span className="nb-empty">{t.nbEmpty}</span>
+      ) : !plan.calls.length ? (
+        <span className="nb-empty">{t.nbNone}</span>
       ) : (
-        <div className="nb-groups">
-          {hot.map((n) => (
-            <div className="nb-group" key={n}>
-              {wheelNeighbours(n, l, r).map((x, i) => (
-                <span key={i} className={`nb-cell ${x === n ? 'nb-center' : ''} ${inPool.has(x) ? 'nb-in-pool' : ''}`}>
-                  <Chip n={x} size="sm" />
-                  {x === n && (
-                    <small className="nb-count">
-                      {t.timesShort}
-                      {counts[n]}
-                    </small>
-                  )}
-                </span>
-              ))}
-            </div>
+        <span className="nb-calls">
+          {plan.calls.map((c, i) => (
+            <span className="nb-call" key={c.center} style={{ '--nb-c': nbColor(i) } as React.CSSProperties}>
+              <Chip n={c.center} size="sm" />
+            </span>
           ))}
-        </div>
+          {plan.singles.length > 0 && <span className="nb-singles">{t.nbSinglesShort(plan.singles.length)}</span>}
+        </span>
       )}
-    </div>
+      <span className="nb-more" aria-hidden>
+        ›
+      </span>
+    </button>
   );
 }
 
-function MiniStepper({ label, value, min, max, onChange }: { label: string; value: number; min: number; max: number; onChange: (v: number) => void }) {
-  const set = (v: number) => {
-    tapFeedback();
-    onChange(Math.max(min, Math.min(max, v)));
-  };
+/** "17 with neighbours" picture: 2 25 [17] 34 6. */
+function CallRow({ covers, center, color }: { covers: number[]; center: number; color?: string }) {
   return (
-    <div className="mini-stepper">
-      <span className="mini-label">{label}</span>
-      <div className="mini-row">
-        <button onClick={() => set(value - 1)} disabled={value <= min} aria-label={`${label} −`}>
-          −
-        </button>
-        <b>{value}</b>
-        <button onClick={() => set(value + 1)} disabled={value >= max} aria-label={`${label} +`}>
-          +
-        </button>
-      </div>
+    <div className="nb-group" style={color ? ({ '--nb-c': color } as React.CSSProperties) : undefined}>
+      {covers.map((x) => (
+        <span key={x} className={`nb-cell ${x === center ? 'nb-center' : ''}`}>
+          <Chip n={x} size="sm" />
+        </span>
+      ))}
     </div>
   );
 }
 
-/** All neighbour settings – used in the sheet and in the settings screen. */
+/** Settings card: on/off + what it means. */
 export function NeighbourSettings() {
   const t = useT();
-  const s = useStore((st) => st.settings);
+  const on = useStore((st) => st.settings.neighbourMode);
   const update = useStore((st) => st.updateSettings);
   return (
     <>
-      <Toggle checked={s.neighbourMode} onChange={(neighbourMode) => update({ neighbourMode })} label={`🎯 ${t.nbMode}`} hint={t.nbModeHint} />
-      <div className="field-label">{t.nbPresets}</div>
-      <div className="presets">
-        {[1, 2, 3, 4].map((v) => (
-          <button
-            key={v}
-            className={`preset ${s.neighbourLeft === v && s.neighbourRight === v ? 'preset-on' : ''}`}
-            onClick={() => {
-              tapFeedback();
-              update({ neighbourLeft: v, neighbourRight: v });
-            }}
-          >
-            {v}·{v}
-          </button>
-        ))}
-      </div>
-      <div className="mini-grid">
-        <MiniStepper label={t.nbLeft} value={s.neighbourLeft} min={0} max={4} onChange={(neighbourLeft) => update({ neighbourLeft })} />
-        <MiniStepper label={t.nbRight} value={s.neighbourRight} min={0} max={4} onChange={(neighbourRight) => update({ neighbourRight })} />
-      </div>
-      <MiniStepper label={t.nbCount} value={s.neighbourCount} min={1} max={6} onChange={(neighbourCount) => update({ neighbourCount })} />
+      <Toggle checked={on} onChange={(neighbourMode) => update({ neighbourMode })} label={`🎯 ${t.nbMode}`} hint={t.nbModeHint} />
       <NeighbourExample />
     </>
   );
@@ -111,40 +75,70 @@ export function NeighbourSettings() {
 
 function NeighbourExample() {
   const t = useT();
-  const { neighbourLeft: l, neighbourRight: r } = useStore((s) => s.settings);
   return (
     <div className="nb-example">
-      <div className="nb-group">
-        {wheelNeighbours(17, l, r).map((x, i) => (
-          <span key={i} className={`nb-cell ${x === 17 ? 'nb-center' : ''}`}>
-            <Chip n={x} size="sm" />
-          </span>
-        ))}
-      </div>
-      <p className="hint">{t.nbExplain(l, r)}</p>
+      <CallRow covers={wheelNeighbours(17, NB_SIDE, NB_SIDE)} center={17} color={nbColor(0)} />
+      <p className="hint">{t.nbExplain}</p>
     </div>
   );
 }
 
-export function openNeighbourSheet() {
-  openDialog((close) => (
-    <Sheet title={undefined}>
-      <NeighbourSheetBody close={close} />
-    </Sheet>
-  ));
+export function openNeighbourSheet(pool?: number[]) {
+  openDialog((close) => <NeighbourSheet pool={pool} close={close} />);
 }
 
-function NeighbourSheetBody({ close }: { close: () => void }) {
+function NeighbourSheet({ pool: given, close }: { pool?: number[]; close: () => void }) {
   const t = useT();
+  const session = useStore((s) => s.sessions.find((x) => x.id === s.activeId));
+  const pool = useMemo(
+    () => given ?? (session ? analyzeSpins(session.spins).recency.slice(0, session.poolSize) : []),
+    [given, session],
+  );
+  const plan = useMemo(() => neighbourPlan(pool), [pool]);
+  const block = NB_SIDE * 2 + 1;
   return (
-    <>
-      <h2 className="sheet-title">{t.nbMode}</h2>
-      <NeighbourSettings />
+    <Sheet title={t.nbSheetTitle}>
+      {plan.calls.length > 0 ? (
+        <div className="nb-plan">
+          {plan.calls.map((c, i) => (
+            <div className="nb-plan-call" key={c.center} style={{ '--nb-c': nbColor(i) } as React.CSSProperties}>
+              <div className="nb-say">„{t.nbSay(c.center)}“</div>
+              <CallRow covers={c.covers} center={c.center} color={nbColor(i)} />
+            </div>
+          ))}
+          {plan.singles.length > 0 && (
+            <div className="nb-plan-singles">
+              <div className="field-label">{t.nbSinglesTitle}</div>
+              <div className="nb-single-chips">
+                {plan.singles.map((n) => (
+                  <Chip key={n} n={n} size="sm" />
+                ))}
+              </div>
+            </div>
+          )}
+          <p className="nb-total">{t.nbTotal(plan.calls.length, block, plan.singles.length)}</p>
+        </div>
+      ) : (
+        <p className="dialog-msg">{pool.length ? t.nbNone : t.nbEmpty}</p>
+      )}
+      <div className="rg-box">
+        <div className="field-label">❔ {t.nbWhatTitle}</div>
+        <NeighbourExample />
+        <p className="hint">{t.nbColorsHint}</p>
+      </div>
+      <NeighbourToggle />
       <button className="btn btn-gold btn-lg" onClick={close}>
         {t.ok}
       </button>
-    </>
+    </Sheet>
   );
+}
+
+function NeighbourToggle() {
+  const t = useT();
+  const on = useStore((st) => st.settings.neighbourMode);
+  const update = useStore((st) => st.updateSettings);
+  return <Toggle checked={on} onChange={(neighbourMode) => update({ neighbourMode })} label={`🎯 ${t.nbMode}`} />;
 }
 
 // ------------------------------------------------------------ responsible gambling
@@ -263,6 +257,13 @@ function HowToSheet({ close }: { close: () => void }) {
           <div>
             <b>{t.how4Title}</b>
             <p>{t.how4}</p>
+          </div>
+        </li>
+        <li>
+          <span className="howto-num">5</span>
+          <div>
+            <b>{t.how5Title}</b>
+            <p>{t.how5}</p>
           </div>
         </li>
       </ol>

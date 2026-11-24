@@ -10,7 +10,8 @@ import { IconMenu, IconUndo } from '../ui/icons';
 import { NewSession } from './NewSession';
 import { MicButton, ReadToggleButton, VoiceBanner, openVoiceHelpSheet } from '../ui/VoiceUi';
 import { useVoiceUi } from '../voiceControl';
-import { NeighbourStrip, openHowTo, openNeighbourSheet } from '../ui/Extras';
+import { nbColor, NeighbourStrip, openHowTo, openNeighbourSheet } from '../ui/Extras';
+import { neighbourPlan } from '../logic/neighbours';
 import { EditSessionSheet } from './SessionsScreen';
 
 export function PlayScreen() {
@@ -39,6 +40,7 @@ function ActivePlay({ session }: { session: Session }) {
 
   const inPool = new Set(pool);
   const shown = displayPool(pool, poolSort);
+  const nbPlan = useMemo(() => (neighbourMode ? neighbourPlan(pool) : null), [neighbourMode, pool]);
   const full = pool.length >= session.poolSize;
 
   const press = (n: number) => {
@@ -130,11 +132,15 @@ function ActivePlay({ session }: { session: Session }) {
             const n = slot?.n;
             const rank = slot ? slot.rank : i;
             const isNextOut = full && rank === session.poolSize - 1;
+            const call = n === undefined ? undefined : nbPlan?.coveredBy.get(n);
+            const isCenter = call !== undefined && nbPlan!.calls[call].center === n;
             return (
               <div
                 key={poolSort && n !== undefined ? `n${n}` : i}
-                className={`slot ${n === undefined ? 'slot-empty' : `slot-${colorOf(n)}`} ${isNextOut ? 'slot-out' : ''} ${rank === 0 && n !== undefined ? 'slot-top' : ''} ${readingIndex === i ? 'slot-reading' : ''}`}
+                className={`slot ${n === undefined ? 'slot-empty' : `slot-${colorOf(n)}`} ${isNextOut ? 'slot-out' : ''} ${rank === 0 && n !== undefined ? 'slot-top' : ''} ${readingIndex === i ? 'slot-reading' : ''} ${call !== undefined ? 'slot-nb' : ''}`}
+                style={call !== undefined ? ({ '--nb-c': nbColor(call) } as React.CSSProperties) : undefined}
               >
+                {isCenter && <span className="slot-nb-star" aria-hidden>★</span>}
                 <span className="slot-pos">{rank + 1}</span>
                 {n === undefined ? (
                   <span className="slot-free">{t.empty}</span>
@@ -157,7 +163,7 @@ function ActivePlay({ session }: { session: Session }) {
 
       <section className="keypad" aria-label={t.tapNumber}>
         {neighbourMode ? (
-          <NeighbourStrip spins={session.spins} pool={pool} />
+          <NeighbourStrip pool={pool} />
         ) : (
           <div className="keypad-label">
             <span>{t.tapNumber}</span>
@@ -220,7 +226,7 @@ function SessionMenu({ sessionId, close }: { sessionId: string; close: () => voi
               openNeighbourSheet();
             }}
           >
-            ⚙ {t.nbMode}: {settings.neighbourLeft}·{settings.neighbourRight}
+            🎯 {t.nbSheetTitle}
           </button>
         )}
         <button

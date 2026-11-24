@@ -43,12 +43,8 @@ export interface Settings {
   keypadLayout: KeypadLayout;
   /** Show the pool sorted 0-36 instead of newest first. */
   poolSort: boolean;
-  /** Neighbour mode ("Nachbarn"): show the hottest numbers with their wheel neighbours. */
+  /** Spot neighbour calls ("17 mit Nachbarn", 2·2) in the pool. */
   neighbourMode: boolean;
-  neighbourLeft: number;
-  neighbourRight: number;
-  /** How many hot numbers to show. */
-  neighbourCount: number;
   /** The "how it works" guide was shown once. */
   seenIntro: boolean;
 }
@@ -125,10 +121,7 @@ export const useStore = create<State>()(
         orientation: 'portrait',
         keypadLayout: 'table',
         poolSort: false,
-        neighbourMode: false,
-        neighbourLeft: 2,
-        neighbourRight: 2,
-        neighbourCount: 1,
+        neighbourMode: true,
         seenIntro: false,
       },
       tab: 'play',
@@ -235,9 +228,6 @@ export const useStore = create<State>()(
             ...st.settings,
             ...patch,
             defaultPoolSize: clampPoolSize(patch.defaultPoolSize ?? st.settings.defaultPoolSize),
-            neighbourLeft: clampInt(patch.neighbourLeft ?? st.settings.neighbourLeft, 0, 4, 2),
-            neighbourRight: clampInt(patch.neighbourRight ?? st.settings.neighbourRight, 0, 4, 2),
-            neighbourCount: clampInt(patch.neighbourCount ?? st.settings.neighbourCount, 1, 6, 1),
           },
         })),
 
@@ -245,7 +235,13 @@ export const useStore = create<State>()(
     }),
     {
       name: 'korbis-roulette-v1',
-      version: 1,
+      version: 2,
+      // v2: neighbour detection became "smart" (2·2 calls in the pool) – switch it on once.
+      migrate: (persisted, version) => {
+        const p = (persisted ?? {}) as { settings?: Partial<Settings> };
+        if (version < 2 && p.settings) p.settings = { ...p.settings, neighbourMode: true };
+        return p as unknown as State;
+      },
       storage: createJSONStorage(() => prefsStorage),
       partialize: (st) => ({ sessions: st.sessions, activeId: st.activeId, settings: st.settings }),
       merge: (persisted, current) => sanitize(persisted, current),
@@ -284,11 +280,9 @@ function sanitize(persisted: unknown, current: State): State {
   };
 }
 
-function clampInt(v: unknown, min: number, max: number, fallback: number): number {
-  return typeof v === 'number' && Number.isInteger(v) ? Math.max(min, Math.min(max, v)) : fallback;
-}
-
-function sanitizeSettings(s: Settings, d: Settings): Settings {
+function sanitizeSettings(raw: Settings, d: Settings): Settings {
+  // Drop settings from older versions (custom left/right neighbour counts).
+  const { neighbourLeft: _l, neighbourRight: _r, neighbourCount: _c, ...s } = raw as Settings & Record<string, unknown>;
   return {
     ...s,
     lang: s.lang === 'en' ? 'en' : s.lang === 'de' ? 'de' : d.lang,
@@ -301,9 +295,6 @@ function sanitizeSettings(s: Settings, d: Settings): Settings {
     handsFree: !!s.handsFree,
     neighbourMode: !!s.neighbourMode,
     seenIntro: !!s.seenIntro,
-    neighbourLeft: clampInt(s.neighbourLeft, 0, 4, d.neighbourLeft),
-    neighbourRight: clampInt(s.neighbourRight, 0, 4, d.neighbourRight),
-    neighbourCount: clampInt(s.neighbourCount, 1, 6, d.neighbourCount),
   };
 }
 
