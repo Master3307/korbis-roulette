@@ -13,3 +13,4 @@ android/keystore.properties
 
 # Android bug reports / local dumps
 bugreport-*.zip
+*.tsbuildinfo

@@ -17,6 +17,8 @@
     in the session menu or by voice ("Nachbarn aus").
 - Guide ("So funktioniert's") has a new step explaining sorting and neighbours, and mentions
   that the keys are laid out like the table.
+- Fix: percentages and decimals in the statistics use a decimal comma in German (22,2 %).
+- Fix: settings card for neighbours no longer repeats its title.
 
 ## 1.5.0 – 2026-11-24
 

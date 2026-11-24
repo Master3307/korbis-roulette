@@ -19,11 +19,12 @@ import { wheelNeighbours } from '../logic/roulette';
 import { NB_SIDE } from '../logic/neighbours';
 import { groupHits, hotNumbers } from '../logic/stats';
 import { openAbout } from '../ui/Extras';
-import type { Strings } from '../i18n/strings';
+import { formatDecimal, formatPct, type Strings } from '../i18n/strings';
 
 type View = 'session' | 'overall';
 
-const fmt = (v: number) => `${v.toFixed(1)}%`;
+/** Percentage in the app language's format (22,2 % in German). */
+const fmt = (v: number) => formatPct(v, useStore.getState().settings.lang);
 
 export function StatsScreen() {
   const t = useT();
@@ -95,7 +96,7 @@ function SessionStats({ session }: { session: Session }) {
               </button>
             }
           >
-            <p className="big-line">{t.lawOfThirdText(law.distinct, law.window, law.expected.toFixed(1))}</p>
+            <p className="big-line">{t.lawOfThirdText(law.distinct, law.window, formatDecimal(law.expected, useStore.getState().settings.lang))}</p>
           </Card>
 
           <Card title={t.wheel} right={<span className="hint">{t.wheelPoolHint}</span>}>

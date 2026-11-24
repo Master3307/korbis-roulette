@@ -571,3 +571,13 @@ export function detectLang(): Lang {
   const l = (typeof navigator !== 'undefined' && navigator.language) || 'de';
   return l.toLowerCase().startsWith('de') ? 'de' : 'en';
 }
+
+/** One decimal with the language's separator: 22,2 (de) / 22.2 (en). */
+export function formatDecimal(v: number, lang: Lang): string {
+  return v.toLocaleString(lang === 'de' ? 'de-DE' : 'en-GB', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+}
+
+/** Percentage with one decimal: "22,2 %" (de) / "22.2%" (en). */
+export function formatPct(v: number, lang: Lang): string {
+  return lang === 'de' ? `${formatDecimal(v, lang)} %` : `${formatDecimal(v, lang)}%`;
+}

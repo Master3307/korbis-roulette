@@ -1,6 +1,8 @@
 import type { ReactNode } from 'react';
 import { colorOf } from '../logic/roulette';
 import { tapFeedback } from '../native';
+import { useStore } from '../store';
+import { formatPct } from '../i18n/strings';
 
 export function Chip({ n, size = 'md', className = '' }: { n: number; size?: 'sm' | 'md' | 'lg' | 'xl'; className?: string }) {
   return <span className={`chip chip-${colorOf(n)} chip-${size} ${className}`}>{n}</span>;
@@ -148,7 +150,7 @@ export function ShareBar({
       <div className="sharebar-top">
         <span className="sharebar-label">{label}</span>
         <span className="sharebar-val">
-          <b>{(p * 100).toFixed(1)}%</b> <small>({value})</small>
+          <b>{formatPct(p * 100, useStore.getState().settings.lang)}</b> <small>({value})</small>
         </span>
       </div>
       <div className="sharebar-track">
